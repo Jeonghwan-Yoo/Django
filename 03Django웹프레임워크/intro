@@ -1,0 +1,825 @@
+03 Django 웹 프레임워크
+장고는 웹 프로그램을 개발하는 데 사용하는 파이썬 웹 프레임워크 중에서 가장 준비가 잘 되어있는 프레임워크.
+제공하는 기능이 풍부하고, 쉽고 빠르게 웹 개발이 가능하며 사용자도 가장 많다.
+파이썬으로 웹 애플리케이션을 개발하고자 한다면 최선의 선택.
+장고는 기본적으로 MVC패턴에 해당하는 MVT패턴에 따라 개발하도록 설계되어 있습니다.
+
+3.1 일반적인 특징
+2003년 로렌스 저널-월드 신문을 만들던 웹 개발팀의 내부 프로젝트로 시작됐고, 2005년 오픈소스 프로젝트로 공개.
+구글의 앱 엔진에서 장고를 사용하면서 많은 사람들이 사용.
+
+주요 기능별 특징
+1)MVC 패턴 기반 MVT
+장고는 MVC(Model-View-Controller)를 기반으로 한 프레임워크입니다. 하지만 장고에서는 View를 Template, Controller를 
+View라고 부릅니다. View는 데이터를 가져오고 변형하는 컴포넌트이고 Template은 데이터를 사용자에게 보여주는 컴포넌트.
+그래서 장고를 MVT(Model-View-Template)프레임워크.
+2)객체 관계 매핑
+ORM(Object-Relational Mapping)은 데이터베이스 시스템과 데이터 모델 클래스를 연결시키는 다리와 같은 역할.
+ORM 기능을 통해 다양한 데이터베이스 시스템을 지원하고 있으며, 이미 구축한 데이터베이스 시스템을 다른 데이터베이스로
+변경하는 경우에도 설정을 조금만 변경하면 가능하도록 쉽고 편리.
+3)자동으로 구성되는 관리자 화면
+장고는 웹 서버의 콘텐츠, 즉 데이터베이스에 대한 관리 기능을 위하여 프로젝트를 시작하는 시점에 기본 기능으로 관리자 화면을
+제공합니다. 이런 관리자 화면을 통해서 애플리케이션에서 사용하는 데이터들을 쉽게 생성하거나 변경할 수 있으며, 개발자가
+별도로 관리 기능을 개발할 필요도 없습니다.
+4)우아한 URL 설계
+웹 프로그래밍에서 URL 디자인은 필수인데, 장고에서는 유연하면서도 강력한 기능을 제공. URL을 직관적이고 쉽게 표현할 수 있다.
+또한 정규표현식을 사용해 복잡한 URL도 표현할 수 있으며, 각 URL 형태를 파이썬 함수에 1:1로 연결하도록 되어있어
+개발이 편리하며, 이해하기도 쉽다.
+5)자체 템플릿 시스템
+장고는 배부적으로 확장이 가능하고 디자인이 쉬운 강력한 템플릿 시스템을 갖고 있습니다. 이를 통해 화면 디자인과 로직에
+대한 코딩을 분리하여 독립적으로 개발 진행이 가능합니다. 장고의 템플릿 시스템은 HTML과 같은 텍스트형 언어를 쉽게
+다룰 수 있도록 개발되었습니다.
+6)캐시 시스템
+동적인 페이지를 만들기 위해서 데이터베이스 쿼리를 수행하고 템플릿을 해석하며, 관련 로직을 실행해서 페이지를 생성하는 일은
+서버에 엄청난 부하를 주는 작업입니다. 그래서 캐시 시스템을 사용해 자주 이용되는 내용을 저장해 두었다가 재사용하면
+성능을 높일 수 있습니다. 장고의 캐시 시스템은 캐시용 페이지를 메모리, 데이터베이스 내부, 파일 시스템 중 아무 곳에나
+저장할 수 있습니다. 또한 캐시 단위를 페이지에서부터 사이트 전체 또는 특정 뷰의 결과, 템플릿의 일부 영역만을 지정하여
+저장해 둘 수도 있습니다.
+6)다국어 지원
+동일한 소스코드를 다른 나라에서도 사용할 수 있도록 텍스트의 번역, 날짜나숫자의 포맷, 타임존의 지정 등과 같은 다국어 환경을
+제공합니다. 간단한 작업만으로 메시지를 하나 이상의 언어로 번역해주기 때문에 다국어를 제공하는 웹 사이트에 유용.
+7)풍부한 개발 환경
+장고는 개발에 도움이 될 수 있는 여러 가지 기능을 제공합니다. 대표적으로 테스트용 웹 서버를 포함하고 있어서 개발 과정에서
+아파치 등의 웹 서버가 없어도 테스트를 진행할 수 있습니다. 또한 디버깅 모드를 사용할 경우에는 에러를 쉽게 파악하고 해결할
+수 있도록 아주 상세한 메시지를 보여줍니다.
+8)소스 변경사항 자동 반영
+장소에서는 *.py파일의 변경 여부를 감시하고 있다가 변경이 되면 실행 파일에 변경 내역을 바로 반영해줍니다. 그래서 장고
+테스트용 웹 서버를 실행 중인 상태에서 소스 파일을 수정하더라도 웹 서버를 다시 시작할 필요 없이 자동으로 새로운 파일이
+반영됩니다.
+
+3.2 장고 프로그램 설치
+장고는 파이썬 언어로 작성되었기 때문에 파이썬이 동작하는 플랫폼에서는 항상 설치 및 사용이 가능.
+파이썬 설치 여부
+>python -V
+설치되지 않았다면 www.python.org에서 다운.
+장고의 설치 과정은 운영체제에 상관없이 매우 유사.
+pip 프로그램으로 설치하는 것이 가장 간단.
+pip 프로그램이 없다면 추가적인 작업이 필요하다.
+
+3.2.1 윈도우에서 장고 설치
+파이썬 3.x버전을 설치하면 pip 프로그램도 같이 설치됩니다.
+pip(Python Install Package) 프로그램은 파이썬의 오픈소스 저장소인 PyPI(Python Package Index)에 있는 SW 패키지를
+설치하고 관리해주는 명령.
+파이썬에서 많이 사용되는 패키지들은 pip 명령으로 간단히 설치할 수 있다.
+>pip install Django
+
+리눅스에서 장고 프로그램 설치는 /(root) 또는 sudo 권한으로 실행하고 있지만, 루트 권한이 없는 경우는 자신의 로컬
+디렉토리에 설치해도 무방.
+로컬 디렉토리에 설치하는 경우라면 가상 환경을 먼저 구성하고 설치해야 한다.
+
+3.2.2 리눅스에서 pip 프로그램으로 설치
+# pip install Django
+업그레이드
+# pip install Django --upgrade
+설치 명령이 성공하면 파이썬의 site-packages 디렉토리 하위에 장고의 최신 버전이 설치.
+만일 루트가 아닌 일반 유저로 실행하고 있다면 sudo 권한을 가진 일반 유저라면
+$ sudo pip install Django
+
+리눅스 sudo 권한
+리눅스에서는 루트사용자와 일반사용자의 권한이 명확히 구분됩니다.
+#이면 루트사용자 $이면 일반 사용자.
+일반 사용자가 sudo 권한을 취득하면 루트 권한의 명령을 실행할 수 있습니다.
+sudo 권한의 추가 삭제는 루트 사용자가 /etc/sudoers 파일을 수정하면 됩니다.
+
+pip프로그램이 설치되어 있지 않다면 pip 프로그램을 먼저 설치합니다.
+아래 디렉토리 또는 자신이 원하는 임의의 디렉토리에 get-pip.py파일을 가져오면 됩니다.
+# cd /usr/local/src
+curl 명령을 사용해도 되고, 웹 브라우저로 https://pip.pypa.io/en/latest/installing/사이트에서 다운받아도 된다.
+# curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+그러면 시스템 bin 디렉토리에 pip 프로그램이 설치됩니다.
+# python get-pip.py
+정상적으로 동작하지 않거나 pip이 없으면 장고 소스를 컴파일하여 수동으로 설치할 수 있습니다.
+
+3.2.3 기존 장고 프로그램 삭제
+수동으로 설치할 때 낮은 버전의 장고가 설치되어 있다면 기존의 장고 프로그램을 삭제해야 한다.
+수동으로 최신 버전의 장고 프로그램을 설치하는 과정에서 낮은 버전의 파일을 참조하여 잘못 설치될 수 있기 때문.
+pip으로 설치하는 경우는 예전 버전의 장고 프로그램을 자동으로 처리해주므로 삭제 과정을 필요하지 않다.
+장고가 설치된 디렉토리로 이동해서 장고 디렉토리를 삭제하면 된다.
+# cd /usr/lib/python3.6/site-packages/
+# rm -rf django
+# rm -rf Django*
+만일 장고가 설치된 디렉토리를 알고 싶다면
+$ python -c "import django;print(django.__path__)"
+
+3.2.4 수동으로 설치
+직접 관련 명령들을 입력하여 장고를 설치합니다.
+디렉토리가 아니더라도 장고 설치용 파일을 내려받을 임의의 디렉토리로 이동합니다.
+# cd /usr/local/src
+2.0.5버전이라고 가정하고 /usr/local/src 디렉토리에 설치용 프로그램을 내려받습니다.
+최신 버전이 아니면 다운로드 사이트가 다르다.
+# wget https://www.djangoproject.com/download/2.0.5/tarball/
+브라우저로 사이트에 접속해 다운받을 수도 있다.
+tar 명령을 이용해 다운받은 설치용 파일의 압축을 풀고, 생성된 디렉토리로 이동.
+# tar xzvf Django-2.0.5.tar.gz
+# cd Django-2.0.5
+Django-2.0.5 디렉토리에 있는 setup.py파일을 이용해 Django패키지를 설치합니다.
+명령이 성공하면 site-packages디렉토리 하위에 장고가 설치됩니다.
+# python setup.py install
+만일 루트가 아닌 sudo 권한을 가진 일반 유저로 실행하고 싶다면
+$ sudo python setup.py install
+
+3.2.5 장고 프로그램 설치 확인
+>python -m django --version
+2.0.5
+
+3.3 장고에서의 애플리케이션 개발 상식
+웹 개발이나 웹 서비스 개발은 웹 애플리케이션 개발이라고 한다.
+웹 사이트를 설계할 때 가장 먼저 해야 할 일은 프로그램이 해야 할일을 적당한 크기로 나누어서 모듈화하는 것.
+이 경우, 웹 사이트의 전체 프로그램 또는 모듈화된 단위 프로그램을 애플리케이션.
+프로그램으로 코딩할 대상을 애플리케이션.
+그러나 장고에서는 애플리케이션의 개념을 웹 서버 개발 측면에서 좀 더 구체화하고 있다.
+웹 사이트에 대한 전체 프로그램을 프로젝트라 하고, 모듈화된 단위 프로그램을 애플리케이션.
+애플리케이션 프로그램들이 모여서 프로젝트를 개발하는 개념.
+장고는 기본적으로 MVT 패턴에 따라 애플리케이션을 개발하도록 유도.
+
+3.3.1 MVT 패턴
+웹 프로그램 개발 시 일반적으로 언급되는 MVC(Model-View-Controller)패턴은 데이터(Model), 사용자 인터페이스(View),
+데이터를 처리하는 로직(Controller)을 구분해서 한 요소가 다른 요소들에 영향을 주지 않도록 설계하는 방식.
+이런 방식으로 개발을 진행하면 UI 디자이너는 데이터 관리나 애플리케이션 로직에 신경쓰지 않고도 UI를 설계할 수 있고,
+자신의 개발 업무에만 집중할 수 있게 된다.
+장고 프레임워크에서는 View를 Template, Controller는 View라고 표현하며, MVT패턴이라고 합니다.
+모델은 데이터베이스에 저장되는 데이터를 의미하고, 템플릿은 사용자에게 보여지는 UI 부분을, 뷰는 실질적으로 프로그래밍
+로직이 동작하여 데이터를 가져오고 적절하게 처리한 결과를 템플릿에 전달하는 역할을 수행합니다.
+예를 들면, 모델은 블로그의 내용을 데이터베이스로부터 가지고 오거나 저장, 수정하는 기능을, 뷰는 버튼을 눌렀을 때
+어떤 함수를 호출하며 데이터를 어떻게 가공할 것인지 결정하는 역할을, 템플릿은 화면 출력을 위해 디자인과 테마를 적용해서
+보여지는 페이지를 만들어주는 역할을 담당합니다.
+MVT 패턴   
+           Request                Model C.R.U.D         ORM
+웹 클라이언트------URL conf--->View-------------->Model<------>DB
+            <----------------     -------------->Template
+                 Response         Template Rendering
+1)클라이언트로부터 요청을 받으면 URLconf를 이용해 URL을 분석합니다.
+2)URL분석 결과를 통해 해당 URL에 대한 처리를 담당할 뷰를 결정합니다.
+3)뷰는 자신의 로직을 실행하면서, 만일 데이터베이스 처리가 필요하다면 모델을 통해 처리하고 그 결과를 반환받습니다.
+4)뷰는 자신의 로직 처리가 끝나면 템플릿을 사용하여 클라이언트에 전송할 HTML 파일을 생성합니다.
+5)뷰는 최종 결과로 HTML 파일을 클라이언트에게 보내 응답합니다.
+
+3.3.2 Model - 데이터베이스 정의
+모델이란 사용될 데이터에 대한 정의를 담고 있는 장고의 클래스입니다.
+장고는 ORM 기법을 사용하여 애플리케이션에서 사용할 데이터베이스를 클래스로 매핑해서 코딩할 수 있습니다.
+즉, 하나의 모델 클래스는 하나의 테이블에 매핑되고, 모델 클래스의 속성은 테이블의 컬럼에 매핑됩니다.
+ORM 기법을 사용하여 테이블을 클래스로 매핑하면, 애플리케이션에서는 데이터베이스에 대한 액세스를 SQL 없이도
+클래스를 다루는 것처럼 할 수 있어서 편리합니다.
+또한 SQLite3 등 데이터베이스 엔진을 변경하더라도 ORM을 통한 API는 변경할 필요가 없어, 필요에 따라 데이터베이스
+엔진을 훨씬 쉽게 변경할 수 있습니다.
+
+ORM이란?
+ORM(Objet-Relational Mapping)은 객체와 관계형 데이터베이스를 연결해주는 역할을 합니다.
+기존의 웹 프로그래밍에서 데이터베이스에 접근하려면 직접 SQL 언어를 사용해 데이터를 요청해야 했고, 개발자는 SQL 및
+데이터베이스에 접근하기 위한 드라이버 API 등에 대해 잘 알고 있어야 했습니다.
+하지만 ORM에서는 데이터베이스 대신에 객체(클래스)를 사용해 데이터를 처리할 수 있습니다.
+객체를 대상으로 필요한 작업을 실행하면, ORM이 자동으로 적절한 SQL 구문이나 데이터베이스 API를 호출해서 처리해주기 때문.
+물론 원한다면 직접 SQL을 사용해 데이터베이스의 데이터를 얻어올 수도 있습니다.
+
+모델 클래스는 models.py파일에 정의합니다.
+from django.db import models
+class Person(models.Model):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+Person 모델은 장고 내부적으로 SQL 명령을 사용하여 데이터베이스 테이블을 생성합니다.
+CREATE TABLE myapp_person(
+    "id" serial NOT NULL PRIMARY KEY,
+    "first_name" varchar(30) NOT NULL,
+    "last_name" varchar(30) NOT NULL
+)
+장고는 테이블 및 컬럼을 자동으로 생성하기 위해 필요한 많은 규칙을 갖고 있다.
+1)테이블명은 애플리케이션명과 모델 클래스명을 밑줄(_)로 연결하고, 모두 소문자로 표시. 원한다면 다른 이름 가능.
+2)Primary Key는 Person클래스에서 정의하지 않아도 장고에서 자동으로 부여합니다. 개발자가 직접 지정할 수도 있다.
+
+장고는 모델 클래스로부터 테이블을 자동으로 생성하기 위해 models.py에 정의된 모델 클래스를 해석하고 여러가지 규칙을 적용.
+테이블 자동 생성에 관한 자세한 설명은 홈페이지를 참고.
+
+장고는 테이블을 모델 클래스로 정의하고 이를 실제 데이터베이스에 반영한 후에도 테이블에 데이터를 입력하고 입력된 데이터를
+확인 및 변경할 수 있는 여러가지 기능을 제공하고 있습니다.
+
+3.3.3 URLconf - URL 정의
+클라이언트로부터 요청을 받으면 장고는 가장 먼저 요청에 들어있는 URL을 분석합니다.
+즉 요청에 들어있는 URL이 urls.py 파일에 정의된 URL 패턴과 매칭되는지를 분석합니다.
+파이썬의 URL 정의 방식은 전통적인 자바나 PHP 계열의 URL보다 직관적이고 이해하기 쉽다.
+그래서 Elegant URL 이라고 부릅니다.
+URL을 정의하기 위해선 urls.py 파일에 URL과 처리함수(View)를 매핑하는 파이썬 코드를 작성.
+이러한 URL/뷰 매핑을 URLconf라고 합니다.
+from django.urls import path
+from . import views
+urlpatterns = [
+    path('articles/2003/', views.special_case_2003),
+    path('articles/<int:year>/', views.year_archive),
+    path('articles/<int:year>/<int:month>/', views.month_archive),
+    path('articles/<int:year>/<int:month>/<slug:slug>/', views.article_detail),
+]
+articles/2003/ 부분이 URL이고 views.special_case_2003 부분이 처리함수(뷰) 입니다.
+URL과 처리 함수를 별도로 정의하고, 이 둘을 매핑하는 방법은 개발자에게 많은 유연성을 제공합니다.
+URL 자체에 처리 함수나 처리용 스크립트 파일 이름이 들어가면 변경이 어려워지기 때문.
+반면 URLconf를 사용하면 URL과 뷰 함수를 서로 자유롭게 연결할 수 있어서 규모가 큰 프로젝트를 개발할 때처럼 URL과
+뷰 함수 이름이 자주 바뀌는 경우에도 URLconf에서 매핑한 부분만 수정하면 되므로 변경이 쉬움.
+
+웹 클라이언트가 웹 서버에 페이지 요청 시, 장고에서 URL을 분석하는 순서
+1)setting.py 파일의 ROOT_URLCONF 항목을 읽어 최상위 URLconf(urls.py)의 위치를 알아냅니다.
+2)URLconf를 로딩하여 urlpatterns 변수에 지정되어 있는 URL 리스트를 검사합니다.
+3)위에서부터 순서대로 URL 리스트의 내용을 검사하면서 URL 패턴이 매치되면 검사를 종료합니다.
+4)매치된 URL의 뷰를 호출합니다. 뷰는 함수 또는 클래스의 메소드입니다. 호출 시 HttpRequest 객체와 그리고, 매칭할 때
+추출된 단어들을 뷰에 인자로 넘겨줍니다.
+5)URL 리스트 끝까지 검사했는데도 매칭에 실패하면 에러를 처리하는 뷰를 호출합니다.
+
+URL 패턴을 정의할 때 <int:year>처럼 꺾쇠를 사용하는 부분이 있습니다.
+이는 URL 패턴의 일부 문자열을 추출하기 위한 것이며, <type:name> 형식으로 사용합니다.
+예를 들어 요청 URL이 /articles/2018/처럼 <> 부분이 정수이면 매치되고 /articles/post/처럼 정수가 아니면 매치되지 않습니다.
+매치된 경우에는 매치된 문자열 2018을 인자명 year에 할당합니다.
+즉 URL이 /articles/2018/이면 뷰 함수를 views.year_archive(request, year=2018)처럼 호출.
+path('articles/<int:year>/', views.year_archive),
+꺾쇠 부분을 장고에서는 Path Converter라고 부르는데 사용되는 타입은 다음과 같고 개발자가 추가로 타입을 등록할 수도 있다.
+str:/(슬래쉬)를 제외한 모든 문자열과 매치됩니다. 타입이 지정되지 않았다면 디폴트로 str타입을 사용.
+int:0또는 양의 정수와 매치됩니다. 매치된 정수는 파이썬의 int타입으로 변환됩니다.
+slug:slug형식의 문자열(ASCII, 숫자, 하이픈, 밑줄로만 구성됨)과 매치됩니다.
+uuid:UUID 형식의 문자열과 매치됩니다. 매치된 문자열은 파이썬의 UUID 타입으로 변환됩니다.
+path:/(슬래쉬)를 포함한 모든 문자열과 매치됩니다. 이는 URL 패턴의 일부가 아닌 전체를 추출하고자 할 때 많이 사용.
+
+URL패턴에 정규표현식(Regular Expression)을 사용하면 URL을 좀 더 세밀하게 표현하거나, 복잡한 URL도 표현할 수 있다.
+from django.urls import path, re_path
+from . import views
+urlpatterns = [
+    path('articles/2003/', views.special_case_2003),
+    re_path(r'^articles/(?P<year>[0-9]{4})/$', views.year_archive),
+    re_path(r'^articles/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/$', views.month_archive)
+    re_path(r'^articles/(?P<year>[0-9]{4})/(?P<month>[0-9]{2})/(?P<slug>[\w-]+)/$', views.article_detail),
+]
+path()함수에서의 <int:year>부분이 re_path()함수에서는 (?P<year>[0-9]{4})처럼 정규표현식을 사용하면서, 모든 정수가
+아니라 0-9로 이뤄진 4자리 숫자만 매치되도록 한정하고 있습니다.
+보통은 path()함수를 많이 사용하고, URL을 좀 더 정교하게 정의하고자 할 때는 re_path()함수와 정규표현식을 사용.
+.(Dot):모든 문자 하나(any single character)
+^(Caret):문자열의 시작
+$:문자열의 끝
+[]:[]괄호에 있는 문자 하나. [akz]라면 a 또는 k 또는 z
+[^]:[]괄호에 있는 문자 이외의 문자 하나. [^ab]라면 a와 b를 제외한 문자 하나
+*:0번 이상 반복. {0,}와 동일
++:1번 이상 반복. {1,}와 동일
+?:0번 또는 1번 반복. {0,1}과 동일
+{n}:n번 반복
+{m,n}:최소 m번에서 최대 n번까지 반복
+|:A|B라면 A 또는 B
+[a-z]:a에서 z까지 임의의 문자. 영문 소문자 한 개
+\w:영문, 숫자 또는 밑줄(_) 한 개. [0-9a-zA-Z_]와 동일
+\d:숫자 한 개. [0-9]와 동일
+
+장고 2.0 이전 url() 함수
+1.11버전까지는 url()함수와 정규표현식을 사용했습니다.
+하지만 장고 2.0부터는 URL 패턴을 쉽게 작성할 수 있도록 path()함수를 도입하였고, 이전의 url()함수는 이름만 re_path()로 변경.
+
+3.3.4 View - 로직 정의
+장고는 웹 요청에 있는 URL을 분석하고, 그 결과로 해당 URL에 매핑된 뷰를 호출합니다.
+일반적으로 뷰는 웹 요청을 받아서 데이터베이스 접속 등 해당 애플리케이션의 로직에 맞는 처리를 하고, 그 결과 데이터를
+HTML로 변환하기 위해 템플릿 처리를 한 후에, 최종 HTML로 된 응답 데이터를 웹 클라이언트로 반환하는 역할.
+장고에서의 뷰는 함수 또는 클래스의 메소드로 작성되며, 웹 요청을 받고 응답을 반환해줍니다.
+응답은 HTML 데이터일 수도 있고, 리다이렉션 명령일 수도 있고, 404에러메시지일 수도 있습니다.
+다양한 형태의 응답 데이터를 만들어내기 위한 로직을 뷰에 작성하는 것.
+이러한 뷰는 보통 views.py파일에 작성하지만, 원한다면 다른 파일에 작성해도 무방.
+다만 파이썬 경로에 있는 파일이어야 장고가 찾을 수 있습니다.
+from django.http import HttpRequest
+import datetime
+def current_datetime(request):
+    now = datetime.datetime.now()
+    html = "<html><body>It is now %s.</body></html>" %now
+    return HttpResponse(html)
+함수로 뷰를 작성했는데 뷰 함수는 첫 번째 인자로 HttpRequest 객체를 받습니다.
+그리고 필요한 처리를 한 후에 최종적으로 HttpResponse 객체를 반환합니다.
+만일 에러를 반환하고 싶다면 HttpResponseNotFound와 같은 에러 응답 객체를 반환하면 됩니다.
+에러 응답 클래스는 모두 HttpResponse클래스의 하위 클래스로 정의되어 있습니다.
+return HttpResponseNotFound('<h1>Page not found</h1>')
+HTML 코드를 뷰 함수 내에 직접 사용했지만, 보통은 별도의 템플릿 파일에 HTML 코드를 작성합니다.
+즉 뷰는 별도로 작성된 템플릿 파일을 해석해서 HTML 코드를 생성하고 이를 HttpResponse 객체에 담아서 클라이언트에게 응답.
+
+3.3.5 Template - 화면 UI 정의
+장고가 클라이언트에게 반환하는 최종 응답은 HTML 텍스트입니다.
+개발자가 응답에 사용할 *.html파일을 작성하면, 장고는 이를 해석해서 최종 HTML 응답을 생성하고, 이를 클라이언트에게 보내줌.
+클라이언트(보통 웹 브라우저)는 응답으로 받은 HTML 텍스트를 해석해서 우리가 보는 웹 브라우저 화면에 UI를 보여주는 것.
+이런 과정에서 개발자가 작성하는 *.html파일을 템플릿이라 부르며, 여기에 화면 UI 모습을 템플릿 문법에 맞게 작성.
+장고는 자체 템플릿 엔진을 갖고 있기 때문에 디자이너도 쉽게 이해할 수 있는 문법을 제공.
+화면의 디자인을 변경할 일이 생기면 프로그램 로직에 상관없이 문법에 맞게 템플릿만 수정하면되서 협업이 편리.
+또한 장고에서 제공하는 템플릿은 템플릿 태그/필터 기능을 사용해 파이썬 코드를 직접 사용할 수 있어 더욱 강력하고 확장성.
+템플릿 파일은 *.html확장자를 가지며, 장고의 템플릿 시스템 문법에 맞게 작성합니다.
+유의할 점은 템플릿 파일을 적절한 디렉토리에 위치시켜야 한다는 것.
+즉, 장고에서 템플릿 파일을 찾는 방식을 이해하고 있어야 하며, 장고는 그에 맞는 위치에 템플릿 파일이 위치해야 템플릿 파일을
+찾을 수 있습니다.
+장고에서 템플릿 파일을 찾을 때는 TEMPLATE_DIRS 및 INSTALLED_APPS에서 지정된 앱의 디렉토리를 검색합니다.
+이 항목들은 프로젝트 설정 파일은 settings.py 파일에 정의되어 있습니다.
+여러 개의 디렉토리를 지정할 수 있는데, 지정된 순서대로 디렉토리를 검색하여 템플릿 파일을 찾습니다.
+TEMPLATES 항목에 정의된 디렉토리를 먼저 찾고, 그 다음에 INSTALLED_APPS 항목에 등록된 각 앱의 templates 디렉토리를 찾음.
+
+파이썬의 디렉토리 구분자 인식
+파이썬에서는 디록토리(폴더) 구분자인 슬래쉬(/)와 백슬래쉬(\)를 OS에 따라 자동으로 구분하여 인식합니다.
+그래서 윈도우에서 파이썬 프로그래밍 시에도 리눅스와 동일하게 구분자로 슬래쉬(/)를 사용하면 됩니다.
+다만 윈도우에서는 디렉토리 구분자로 백슬래쉬를 사용할 수도 있는데, 이 경우는 이스케이프 문자인 백스래쉬를 앞에 붙여
+백슬래쉬 두개(\\)로 표현합니다.
+
+3.3.6 MVT 코딩 순서
+무엇을 먼저 코딩해야 한느지에 대해 정해진 순서는 없습니다.
+MVT 방식에 따르면 화면 설계는 뷰와 템플릿 코딩으로 연결되고, 테이블 설계는 모델 코딩에 반영됩니다.
+그렇기 때문에 독립적으로 개발할 수 있는 모델을 먼저 코딩하고, 뷰와 템플릿은 서로 영향을 미치므로 모델 이후에 같이
+코딩하는 것이 일반적.
+UI화면을 생각하면서 로직을 풀어나가는 것이 쉬워 보통은 템플릿을 먼저 코딩.
+다만 클래스형 뷰(CBV, Class-Based View)처럼 뷰의 코딩이 매우 간단한 경우에는 뷰를 먼저 코딩하고, 템플릿을 코딩.
+1)프로젝트 뼈대 만들기:프로젝트 및 앱 개발에 필요한 디렉토리와 파일 생성
+2)모델 코딩하기:테이블 관련 사항을 개발(models.py, admin.py)
+3)URLconf코딩하기:URL 및 뷰 매핑 관계를 정의(urls.py)
+4)템플릿 코딩하기:화면 UI 개발(templates/ 디렉토리 하위의 *.html 파일들)
+5)뷰 코딩하기:애플리케이션 로직 개발(views.py)
+
+자신만의 코딩 순서를 정하는 것이 로직을 풀어나가는 데 일관성을 유지할 수 있고, 웹 개발 노하우도 빨리 습득할 수 있다.
+
+3.4 애플리케이션 설계하기
+프로젝트란 개발 대상이 되는 전체 프로그램을 의미하며, 프로젝트를 몇 개의 기능 그룹으로 나누었을 때, 프로젝트 하위의
+서브 프로그램을 애플리케이션이라고 말합니다.
+즉 서브 프로그램인 애플리케이션을 개발하고, 이들을 모아 프로젝트 개발을 완성하게 되는 것.
+이런 개념으로 프로젝트 디렉토리와 애플리케이션 디렉토리를 구분하고, 코딩하는 파일도 프로젝트 파일인지 애플리케이션 파일인지
+구분해서 적절한 위치에 저장해야 합니다.
+중요한 점은 하나의 애플리케이션이 여러 개의 프로젝트에 포함될 수 있기 때문에, 애플리케이션을 한 번만 개발하고,
+이를 다른 프로젝트에 재사용하여 개발의 생산성을 높일 수 있다는 것.
+또한 애플리케이션 단위로 모아 프로젝트로 만들고, 프로젝트를 모아 더 큰 프로젝트를 만드는 방식으로 계층적인 개발 가능.
+
+프로젝트와 애플리케이션 모두 파이썬 패키지 디렉토리에 해당하는데, 파이썬에서는 __init__.py파일이 존재하는 디렉토리를
+패키지라고 합니다.
+
+개발하게 될 애플리케이션의 내용은 설문에 해당하는 질문을 보여준 후 질문에 포함되어 있는 답변 항목에 투표하면
+그 결과를 알려주는 예제.
+index.html              선택     detail.html                     results.html
+What is your hobby?    ------->  What is your hobby?   vote      What is your hobby?
+Who do you like best?            oReading             ------->   Reading - 1 votes
+Where do you live?               oSoccer                         Soccer - 0 votes
+                                 Vote
+3개의 페이지를 기준으로 개발을 진행.
+index.html:최근에 실시하고 있는 질문의 리스트를 보여줍니다.
+detail.html:하나의 질문에 대해 투표할 수 있도록 답변 항목을 폼으로 보여줍니다.
+results.html:질문에 따른 투표 결과를 보여줍니다.
+
+Qustion테이블 설계
+컬럼명           타입            제약 조건                           설명
+id              integer         NotNull, PK, AutoIncrement         Primary Key
+question_text   varchar(200)    NotNull                            질문 문장
+pub_date        datetime        NotNull                            질문 생성 시각
+
+Choice테이블 설계
+컬럼명           타입            제약 조건                           설명
+id              integer         NotNull, PK, AutoIncrement          Primary Key
+choice_text     varchar(200)    NotNull                             답변 항목 문구
+votes           integer         NotNull                             투표 카운트
+question        integer         NotNull, FK(Question, id), Index    Foreign Key
+
+Question 테이블:질문을 저장하는 테이블.
+Choice 테이블:질문별로 선택용 답변 항목을 저장하는 테이블.
+모든 칼럼은 NotNull로 정의해서, 반드시 칼럼에 값이 있어야 합니다.
+Primary Key는 자동 증가 속성으로 지정하였습니다.
+Choice 테이블의 question 칼럼은 Question테이블과 Foreign Key 관계로 연결되도록 했고, 또한 Index를 생성하도록 했다.
+
+3.5 프로젝트 뼈대 만들기
+코딩은 프로젝트 뼈대를 만드는 것에서부터 시작합니다.
+즉 프로젝트에 필요한 디렉토리 및 파일을 구성하고, 설정 파일을 셋팅합니다.
+그 외에도 기본 테이블을 생성하고, 관리자 계정인 슈퍼유저를 생성하는 것이 필요합니다.
+프로젝트가 만들어지면 그 하위에 애플리케이션 디렉토리 및 파일을 구성합니다.
+장고는 이런 작업을 위한 장고 쉘 커맨드를 제공합니다.
+|ch3|──┬──db.sqlite3
+       ├──manage.py
+       ├──|mysite|──┬──__init__.py
+       │            ├──settings.py
+       │            ├──urls.py
+       │            └──wsgi.py
+       └──|polls|───┬──__init__.py
+                    ├──admin.py
+                    ├──apps.py
+                    ├──|migrations|──__init__.py
+                    ├──models.py
+                    ├──tests.py
+                    └──views.py
+디렉토리 및 파일은 뼈대에 해당하는 것으로 이외에도 프로젝트 완성된 후에는 templates, static, logs 등의 디렉토리가 더 필요.
+또한 개발자가 필요하다고 판단되면 프로젝트 개발을 진행하면서 임의로 추가해도 무방.
+|ch3|:프로젝트 관련 디렉토리 및 파일을 모아주는 최상위 루트 디렉토리입니다. 보통 settings.py 파일의 BASE_DIR 항목으로 지정.
+db.sqlite3:SQLite3 데이터베이스 파일입니다. 테이블이 들어있습니다.
+manage.py:장고의 명령어를 처리하는 파일입니다.
+|mysite|:프로젝트명으로 만들어진 디렉토리입니다. 프로젝트 관련 파일들이 들어있습니다.
+__init__.py:디렉토리에 이 파일이 있으면 파이썬 패키지로 인식합니다.
+settings.py:프로젝트 설정 파일입니다.
+urls.py:프로젝트 레벨의 URL 패턴을 정의하는 최상위 URLconf입니다. 보통은 애플리케이션 디렉토리마다 하위 urls.py파일이
+또 있습니다.
+wsgi.py:Apache와 같은 웹 서버와 WSGI 규격으로 연동하기 위한 파일입니다.
+|polls|:애플리케이션명으로 만들어진 애플리케이션 디렉토리입니다. 해당 애플리케이션 관련 파일들이 들어있습니다.
+__init__.py:디렉토리에 이 파일이 있으면 파이썬 패키지로 인식합니다.
+admin.py:Admin사이트에 모델 클래스를 등록해주는 파일입니다.
+apps.py:애플리케이션의 설정 클래스를 정의하는 파일입니다.
+|migrations|:데이터베이스 변경사항을 관리하기 위한 디렉토리입니다. 데이터베이스에 추가, 삭제, 변경 등이 발생하면
+변경 내역을 기록한 파일들이 위치합니다.
+models.py:데이터베이스 모델 클래스를 정의하는 파일입니다.
+tests.py:단위 테스트용 파일입니다.
+views.py:뷰 함수를 정의하는 파일입니다. 함수형 뷰 및 클래스형 뷰 모두 이파일에 정의합니다.
+|templates|:프로젝트를 진행하면서 추가됩니다. 템플릿 파일들이 들어있습니다. 보통은 프로젝트 레벨과 애플리케이션 레벨의
+템플릿으로 구분하여 ch3/templates 및 ch3/polls/templates 위치에 생성됩니다.
+|static|:프로젝트를 진행하면서 추가됩니다. CSS, Image, Javascript 파일들이 들어있습니다. 보통은 프로젝트 레벨과
+애플리케이션 레벨로 구분하여 ch3/static 및 ch3/polls/static 위치에 생성됩니다.
+|logs|:프로젝트를 진행하면서 추가됩니다. 로그 파일들이 들어있습니다. 로그 파일의 위치는 settings.py 파일의 LOGGING
+항목으로 지정합니다.
+뼈대를 만들기 위해서는 다음과 같은 순서로 명령을 실행
+>django-admin startproject mysite    //mysite라는 프로젝트를 생성함
+>python manage.py startapp polls     //polls라는 애플리케이션을 생성함
+>notepad settings.py                 //설정 파일을 확인 및 수정함
+>python manage.py migrate            //데이터베이스에 기본 테이블을 생성함
+>python manage.py runserver          //현재까지 작업을 개발용 웹 서버로 확인함
+
+3.5.1 프로젝트 생성
+먼저 원하는 프로젝트 명칭으로 만듭니다.
+>django-admin startproject mysite
+그러면 장고가 필요한 디렉토리 및 파일을 생성해줍니다.
+명령 실행서 입력한 mysite라는 디렉토리가 최상위와 그 하위, 두 군데에 생깁니다.
+하위 mysite 디렉토리는 프로젝트 디렉토리이고, 상위 mysite 디렉토리는 프로젝트 관련 디렉토리/파일을 모으는 역할만 하는
+디렉토리입니다.
+상위 mysite 디렉토리는 특별한 의미를 가지고 있지 않아 이름을 변경해도 무방.
+>move mysite ch3    //리눅스, 맥에서는 $mv mysite ch3
+
+3.5.2 애플리케이션 생성
+프로젝트 루트 디렉토리 ch3으로 이동해 polls라는 애플리케이션을 만드는 명령을 실행합니다.
+\ch3>python manage.py startapp polls
+그러면 장고가 polls라는 애플리케이션 디렉토리와 그 하위에 필요한 파일들을 생성해줍니다.
+파일 이름도 장고에서 지어줍니다.
+모든 애플리케이션 개발에 반드시 필요한 파일들은 장고가 알아서 생성해주고, 개발자들은 그 내용을 채워넣기만 하면 됩니다.
+즉 개발자들이 어떤 파일들을 만들어야 할지 고민할 필요가 없어짐.
+
+프로젝트는 여러 개의 애플리케이션들을 포함하고, 동일한 애플리케이션이라도 여러 개의 프로젝트에 생성될 수 있습니다.
+
+3.5.3 프로젝트 설정 파일 변경
+프로젝트에 필요한 설정값들은 settings.py 파일에 지정합니다.
+settings.py 파일은 프로젝트의 전반적인 사항들을 설정해주는 곳으로, 루트 디렉토리를 포함한 각종 디렉토리의 위치, 로그의
+형식, 프로젝트에 포함된 애플리케이션의 이름 등이 지정되어 있습니다.
+\ch3\mysite>notepad settings.py
+1)ALLOWED_HOSTS 항목을 적절하게 지정해야 합니다. 장고는 DEBUG=True이면 개발모드로, False이면 운영모드로 인식합니다.
+운영 모드인 경우는 ALLOWED_HOSTS에 반드시 서버의 IP나 도메인을 지정해야 하고, 개발 모드인 경우에는 값을 지정하지 않아도
+['localhost', '127.0.0.1']로 간주합니다.
+지금은 개발 모드이고 장고의 runserver를 기동할 서버의 IP가 127.0.0.1뿐만 아니라 192.168.56.101일 수도 있으면
+ALLOWED_HOSTS = ['192.168.56.101', 'localhost', '127.0.0.1']
+2)프로젝트에 포함되는 애플리케이션들은 모두 설정 파일에 등록되어야 합니다. 따라서 개발하고 있는 polls 애플리케이션도
+등록해야 합니다. 애플리케이션을 등록할 때는 간단하게 애플리케이션의 모듈명인 'polls'만 등록해도 되지만, 애플리케이션의
+설정 클래스로 등록하는 것이 더 정확한 방법. polls 앱의 설정 클래스는 startapp polls명령 시에 자동 생성된 apps.py에
+PollsConfig라고 정의되어 있습니다. 그래서 장고가 설정 클래스를 찾을 수 있도록 모듈 경로까지 포함해
+'polls.apps.PollsCongfig'라고 등록합니다.
+INSTALLED_APPS = [
+    ...
+    'polls.apps.PollsConfig', #추가
+]
+3)프로젝트에 사용할 데이터베이스 엔진입니다. 장고는 디폴트로 SQLite3 데이터베이스 엔진을 사용하도록 설정.
+물론 다른 데이터베이스 엔진으로 변경할 수도 있습니다. 만일 MySQL 등 다른 데이터베이스로 변경하고 싶다면 settings.py에서
+수정해주면 됩니다. 파일 중간에 데이터베이스 설정 항목을 확인할 수 있습니다.
+DATABASE = {
+    'default':{
+        'ENGINE':'...',
+        'NAME':...,
+    }
+}
+4)타임존 지정입니다. 최초에는 세계표준시(UTC)로 되어 있는데, 한국 시간으로 변경합니다.
+TIME_ZONE = 'Asia/Seoul'
+
+USE_TZ 설정 항목
+만일 USE_TZ=True라고 설정하면 장고가 알아서 시간대(time zone)를 조정해줍니다. 즉 DB에는 UTC시간으로 저장하고,
+UI에서 입력받는 폼처리 및 UI에 출력하는 템플릿 처리시에는 TIME_ZONE 항목에 설정한 시간대를 반영하여 처리하는 방식.
+장고 공식 문서에는 만일 하나의 시간대만 사용하는 경우에도 Daylight Saving Time를 자동으로 계산할 수 있도록
+USE_TZ=True설정을 권고하고 있습니다.
+그런데 한국은 Daylight Saving Time을 사용하지 않으므로, Asia/Seoul시간대만 사용하는 장고 프로그램을 개발하고 있다면,
+USE_TZ=False로 설정하는 게 더 편리함. 그러면 DB에 저장되는 시간도 UTC가 아니라 한국시간으로 저장되기 떄문.
+
+3.5.4 기본 테이블 생성
+migrate 명령은 데이터베이스에 변경사항이 있을 때 이를 반영해주는 명령입니다.
+기본 테이블 생성을 위해 명령을 실행.
+/ch3>python manage.py migrate
+장고는 모든 웹 프로젝트 개발 시 반드시 사용자와 그룹 테이블 등이 필요하다는 가정 하에 설계되었습니다.
+그래서 테이블을 전혀 만들지 않았더라도, 사용자 및 그룹 테이블 등을 만들어주기 위해 프로젝트 개발 시작 시점에
+이 명령을 실행하는 것.
+명령을 실행하면 migrate 명령에 대한 로그가 보이고, 실행 결과로 SQLite3 데이터베이스 파일은 db.sqlite3 파일이 생성.
+
+3.5.5 지금까지 작업 확인하기
+확인을 위해 웹 서버를 실행하고, 그 웹서버에 접속해보자.
+장고에서는 개발 과정 도중에 현재 상태를 확인해 볼 수 있도록 runserver라고 하는 간단한 테스트용 웹 서버를 제공.
+runserver용으로 별도의 cmd 창을 열어 사용하면 편리.
+/ch3>python manage.py runserver 0.0.0.0:8000 //또는 0:8000
+명령 입력 시 자신의 서버에 맞는 IP 주소와 포트번호를 입력하면 됩니다.
+0.0.0.0이란 현재 명령을 실행 중인 서버의 IP 주소가 무엇으로 설정되어 있더라도 웹 접속 요청을 받겠다는 의미.
+즉, 웹 브라우저의 주소창에서는 runserver를 실행 중인 서버의 실제 IP주소를 입력하면 됩니다.
+
+runserver 실행 방법
+>python manage.py runserver
+IP주소와 포트번호를 지정하지 않으면, 디폴트로 127.0.0.1 주소 및 8000번 포트를 사용합니다.
+>python manage.py runserver 8888
+포트번호만 지정하면, 디폴트 127.0.0.1 주소 및 지정한 8888번 포트를 사용합니다.
+$ python manage.py runserver 0.0.0.0:8000 &
+&를 명령 끝에 추가하면, 웹 서버 프로그램이 백그라운드에서 실행됩니다. 단 리눅스와 맥에서만 가능.
+
+runserver를 중지할 때는 Ctrl+c를 누릅니다.
+runserver가 정상적으로 실행되었다면, 웹 브라우저를 열고 주소창에 서버 IP주소를 적어줍니다.
+http://127.0.0.1:8000/
+그러면 장고의 환영 메시지가 나타납니다.
+
+장고에서 기본적으로 제공하는 Admin 사이트에 접속해 테이블이 생성된 것을 확인해보겠습니다.
+웹 브라우저의 주소창에 IP주소와 포트번호는 그대로 입력하고 URL 경로만 /admin으로 변경.
+http://127.0.0.1:8000/admin
+로그인하려면 Username, Password를 넣어야 하는데 아직 생성하지 않았습니다.
+그러므로 Admin사이트에 로그인하기 위한 관리자(슈퍼유저)를 만들어보겠습니다.
+\ch3>python manage.py createsuperuser
+화면 지시에 따라 Username/Email/Password를 입력해 관리자를 생성합니다.
+생성한 관리자로 로그인하면 장고에서 만들어준 Users와 Groups테이블이 생성된 것을 확인할 수 있습니다.
+Admin사이트에서 Users와 Groups테이블을 포함해 앞으로 만들 테이블에 대한 데이터의 입력, 변경, 삭제 등의 작업을
+할 수 있습니다.
+Admin화면에서 기본적으로 Users와 Groups테이블이 보이는 것은 이미 settings.py파일에 django.contrib.auth 애플리케이션이
+등록되어 있기 때문.
+즉 장고에서 기본으로 제공하는 auth 앱에 Users와 Groups 테이블이 미리 정의되어 있는 것.
+기억할 점은 애플리케이션을 MVT 패턴 방식으로 개발할 수 있도록 골격이 만들어졌다는 것.
+>tree /F ch3
+
+3.6 애플리케이션 개발하기 - Model 코딩
+모델 작업은 데이터 베이스에 테이블을 생성하는 작업.
+1)>notepad models.py                //테이블을 정의함
+2)>notepad admins.py                //정의된 테이블이 Admin 화면에 보이게 함
+3)>python manage.py makemigrations  //데이터베이스에 변경이 필요한 사항을 추출함
+4)>python manage.py migrate         //데이터베이스에 변경사항을 반영함
+5)>python manage.py runserver       //현재까지 작업을 개발용 웹 서버로 확인함
+
+3.6.1 테이블 정의
+polls 애플리케이션은 Question와 Choice 두 개의 테이블이 필요했습니다.
+테이블은 models.py 파일에 정의합니다.
+ch3/polls/models.py
+장고에서는 테이블을 하나의 클래스로 정의하고, 테이블의 칼럼은 클래스의 변수(속성)로 매핑합니다.
+테이블 클래스는 django.db.models.Model 클래스를 상속받아 정의하고, 각 클래스 변수의 타입도 장고에서 미리 정의된
+필드 클래스를 사용합니다.
+
+Question 테이블 칼럼과 클래스 변수 간의 매핑
+테이블 칼럼명    칼럼 타입      장고의 클래스 변수        장고의 필드 클래스
+id              integer       (id)                     (PK는 장고에서 자동 생성해줌)
+question_text   varchar(200)  question_text            models.CharField(max_length=200)
+pub_date        datetime      pub_date                 models.DateTimeField('date published')
+
+Choice 테이블 칼럼과 클래스 변수 간의 매핑
+테이블 칼럼명    칼럼 타입      장고의 클래스 변수        장고의 필드 클래스
+id              integer       (id)                     (PK는 장고에서 자동 생성해줌)
+choice_text     varchar(200)  choice_text              models.CharField(max_length=200)
+votes           integer       votes                    models.IntegerField(default=0)
+question_id     integer       question                 models.ForeighKey(Question)
+
+클래스 변수명은 컬럼명을 그대로 매핑해주면 됩니다.
+유의할 사항은 다음과 같습니다.
+1)PK(Primary Key)는 클래스에 지정해주지 않아도, 장고는 항상 PK에 대한 속성을 Not Null 및 Autoincrement로,
+이름은 id로 해서 자동으로 만들어 줍니다.
+2)DateTimeField() 필드 클래스에 정의한 date published는 pub_date 컬럼에 대한 레이블 문구입니다.
+나중에 Admin 사이트에서 문구를 보게 됩니다.
+3)FK(Foreign Key)는 항상 다른 테이블의 PK에 연결되므로, Question 클래스의 id 변수까지 지정할 필요 없이 Question
+클래스만 지정하면 됩니다. 실제 테이블에서 FK로 지정된 컬럼은 _id 접미사가 붙습니다.
+4)__str__()메소드는 객체를 문자열로 표현할 때 사용하는 함수입니다. Admin 사이트나 장고 쉘 등에서 테이블명으로
+보여줘야 하는데, 이때 __str__() 메소드를 정의하지 않으면 테이블명이 제대로 표시되지 않습니다.
+파이썬 2에서는 __unicode__() 메소드를 사용합니다.
+
+3.6.2 Admin 사이트에 테이블 반영
+Admin 사이트에 접속하면 장고에서 기본적으로 제공하는 Users, Groups 테이블만 보입니다.
+models.py 파일에서 정의한 테이블도 Admin 사이트에 보이도록 등록합니다.
+ch3/polls/admin.py
+models.py 모듈에서 정의한 Question, Choice 클래스를 임포트하고, admin.site.register() 함수를 사용하여 임포트한
+클래스를 Admin 사이트에 등록해주면 됩니다.
+이와 같이 테이블을 새로 만들 때는 models.py와 admin.py 두 개를 함께 수정해야 합니다.
+
+3.6.3 데이터베이스 변경사항 반영
+테이블의 신규 생성, 테이블의 정의 변경 등 데이터베이스에 변경이 필요한 사항이 있으면, 데이터베이스에 실제로 반영해주는
+작업을 해야 합니다.
+\ch3>python manage.py makemigrations
+\ch3>python manage.py migrate
+migrations는 장고 1.7버전부터 사용된 개념으로, 테이블 및 필드의 생성, 삭제, 변경 등과 같이 데이터베이스에 대한
+변경사항을 알려주는 정보입니다.
+물리적으로는 애플리케이션 디렉토리별로 마이그레이션 파일이 존재합니다.
+makemigrations 명령에 의해 polls/migrations 디렉토리 하위에 마이그레이션 파일들이 생기고, 이 파일들을 이용해
+migrate 명령으로 데이터베이스에 테이블을 만들어줍니다.
+
+migrate 명령은 1.7이전 버전의 syncdb 명령을 개선한 명령.
+
+에러메시지가 없으면 정상적으로 실행된 것.
+
+models.py 모듈에 정의한 테이블을 migrate 명령으로 데이터베이스에 반영할 때, 장고가 사용하는 SQL 문장을 확인할 수 있다.
+>python manage.py sqlmigrate polls 0001
+
+3.6.4 지금까지 작업 확인하기
+models.py 파일에 테이블을 정의하고 데이터베이스에 반영했습니다.
+또한 테이블을 Admin 사이트에도 등록했다.
+확인하기 위해 Admin 사이트에 접속.
+runserver를 실행시키고, http://127.0.0.1:8000/admin
+추가한 Questions와 Choices 테이블을 볼 수 있다.
+
+파이썬 import 문법
+파이썬의 import 문법을 알고 싶다면, 패키지, 모듈, 모듈 검색 경로, sys.path, PYTHONPATH 등의 용어를 공부.
+admin.py 파일에서 models.py 파일의 Question 객체를 임포트하여 사용한다고 하자.
+# 방법-1
+import polls
+admin.site.register(polls.models.Question)
+# 방법-2
+import polls.models
+site.register(polls.models.Question)
+# 단독 import 문장은 모듈이나 패키지만 허용하므로 import polls.models.Question은 불가능.
+# 방법-3(많이 사용 - 절대 경로 임포트 방식)
+from polls.models import Question
+admin.site.register(Question)
+# 방법-4
+from polls import models
+admin.site.register(models.Question)
+# 방법-5(많이 사용 - 상대 경로 임포트 방식, 재사용 측면에서 유리)
+from .models import Question
+admin.site.register(Question)
+# 방법-6
+from . import models
+admin.site.register(models.Question)
+
+3.7 애플리케이션 개발하기 - View 및 Template 코딩
+3개의 페이지를 보여주기 위해 필요한 뷰와 템플릿을 코딩.
+이를 위해서는 요청에서부터 응답까지의 처리 흐름에 대한 로직이 설계되어야 합니다.
+4개의 URL과 뷰가 필요하다고 판단.
+사용자에게 보여지는 페이지가 3개이므로, 3개의 템플릿 파일이 필요.
+URL                  View            Template
+/polls/ -----------> index() ------> index.html
+/polls/5/ ---------> detail() -----> detail.html
+/polls/5/vote/ ----> vote() 
+/polls/5/results/ <----┘redirect
+        └----------> result() -----> results.html
+
+코딩으로 반영하기 위해 서로 관련 있는 URL과 뷰 및 템플릿을 매핑하여 표로 정리
+중요한 점은 URL과 뷰는 1:1 관계로(N:1도 가능) 매핑된다는 점.
+이러한 URL/뷰 매핑을 URLconf라고 하며 urls.py 파일에 작성합니다.
+URLconf 설계 - URL과 뷰 매핑
+URL 패턴           뷰 이름        뷰가 처리하는 내용
+/polls/            index()       index.html 템플릿을 보여줍니다.
+/polls/5/          detail()      detail.html 템플릿을 보여줍니다.
+/polls/5/vote      vote()        detail.html에 있는 폼을 POST 방식으로 처리합니다.
+/polls/5/results/  results()     results.html 템플릿을 보여줍니다.
+/admin/            (장고 기능)    Admin 사이트를 보여줍니다(장고에서 기본으로 제공).
+5는 질문번호가 채워지는 자리로 예다.
+코딩 순서는 정해진 것은 없지만, 로직의 흐름상 URLconf를 먼저 코딩한 후에 뷰, 템플릿 또는 템플릿, 뷰 순서로 코딩.
+1)urls.py 작성              //URLconf 내용을 코딩
+2)views.index() 함수 작성   //index.html 템플릿도 같이 작성
+3)views.detail() 함수 작성  //detail.html 템플릿도 같이 작성
+4)views.vote() 함수 작성    //리다이렉션 처리 들어있음
+5)views.results() 함수 작성 //results.html 템플릿도 같이 작성
+
+3.7.1 URLconf 코딩
+URLconf 설계 내용에서 5개의 URL과 뷰가 필요합니다.
+그 내용을 그대로 기계적으로 urls.py 파일에 코딩.
+ch3\mysite\urls.py
+
+path() 함수는 route, view 2개의 필수 인자와 kwargs, name 2개의 선택 인자를 받습니다.
+route:URL 패턴을 표현하는 문자열입니다. URL 스트링.
+view:URL 스트링이 매칭되면 호출되는 뷰 함수. HttpRequest 객체와 URL 스트링에서 추출된 항목이 뷰 함수의 인자로 전달.
+kwargs:URL 스트링에서 추출된 항목 외에 추가적인 인자를 뷰 함수에 전달할 때, 파이썬 사전 타입으로 인자를 정의.
+name:각 URL 패턴별로 이름을 붙여줍니다. 정해준 이름은 템플릿 파일에서 많이 사용.
+
+path('admin/', admin.site.urls),
+만일 요청의 URL이 /admin/이라면 위에 라인이 매칭되고, 장고에서 제공해주는 admin 앱의 URL 매핑 처리에 일임.
+include()함수와 처리 방식이 거의 동일.
+admin 앱의 URLconf를 인용함으로써 장고의 Admin 사이트를 그대로 사용할 수 있다.
+path('polls', views.index, name='index')
+만일 요청의 URL이 /polls/라면 위에 라인이 매칭되고, URL 스트링에서 추출되는 항목이 없으므로
+views.index(request)처럼 뷰 함수가 호출됩니다.
+URL 패턴의 이름을 index라고 정합니다.
+path('polls/<int:question_id>/', views.detail, name='detail'),
+만일 요청의 URL이 /polls/3/이라면 위에 라인이 매칭되고, URL 스트링에서 3이 추출되므로 뷰 함수를 호출 시
+views.detail(request, question_id=3)처럼 인자가 대입.
+이 URL 패턴의 이름을 detail이라고 정한다.
+path('polss/<int:question_id>/results/', views.results, name='results'),
+만일 요청의 URL이 /polls/7/results/라면 위 라인이 매칭되고, 추출된 7은 파이썬 int 타입으로 변환된 후에, 뷰 함수를 호출 시
+views.results(request, question_id=7)처럼 인자가 대입.
+이 URL 패턴의 이름을 results라고 정한다.
+path('polls/<int:question_id>/vote/', views.vote, name='vote'),
+만일 요청의 URL이 /polls/9/vote/라면 위 라인이 매칭되고, 뷰 함수를 호출 시 views.vote(request, question_id=9)처럼
+인자가 대입.
+이 URL 패턴의 이름을 vote라고 정한다.
+추가적으로, mysite/settings.py 파일에 ROOT_URLCONF항목이 정의된다.
+장고는 URL 분석 시, 이 항목에 정의된 urls.py 파일을 가장 먼저 분석하기 시작.
+ROOT_URLCONF = 'mysite.urls'
+
+또한, URLconf를 코딩할 때 하나의 urls.py파일에 작성할 수도 있고, mysite/urls.py와 polls/urls.py 2개의 파일에
+작성할 수도 있습니다.
+ch3/mysite/urls.py
+ch3/polls/urls.py
+이 방법이 더 좋은 방법입니다.
+즉 URLconf 모듈을 계층적으로 구성하는 것이 변경도 쉬워지고, 확장도 용이해지기 때문.
+만일 URL의 polls를 votes라고 변경한다고 가정했을 때, 1개의 파일로 URLconf를 코딩한 경우는 모든 패턴을
+수정해야 하지만, 이 방법은 상위 URLconf에서 1개의 패턴만 수정하면 됩니다.
+나중에 yoursite라는 프로젝트에 polls 애플리케이션을 재사용하는 경우, 하위의 URLconf를 그대로 가져가서 사용할 수 있습니다.
+재사용을 기본 원칙으로 하는 장고의 장점 중 하나입니다.
+그리고 polls/urls.py에서 사용한 app_name변수는 URL 패턴의 이름이 충돌나는 것을 방지하기 위한 이름 공간(namespace)역할.
+보통의 프로젝트에서는 여러 개의 애플리케이션으로 이뤄지는 경우가 대부분.
+예를 들어 polls애플리케이션의 URL패턴 이름과 blog애플리케이션의 URL패턴 이름이 모두 detail이 되는 경우가 발생할 수 있다.
+이 둘을 구별하기 위해 app_name 변수로 이름 공간을 지정하는 것.
+즉, polls 애플리케이션의 detail은 polls:detail, blog 애플리케이션의 detail은 blog:detail로 표기해서 구분.
+
+이름 공간은 reverse()함수나 {% url %}템플릿 태그에서 자주 사용.
+
+3.7.2 뷰 함수 index() 및 템플릿 작성
+뷰 함수와 템플릿은 서로에게 영향을 미치기 때문에 같이 작업.
+다만 UI 화면을 생각하면서 로직을 풀어나가는 것이 쉽기 때문에 템플릿을 먼저 코딩.
+내용을 구현하기 위해 템플릿 파일 index.html에 입력.
+ch3\polls\templates\polls\index.html
+
+중요한 점은 index.html을 작성하면서 필요한 변수가 무엇인지를 찾아내는 것.
+이들 변수는 뷰 함수에서 context 변수로 정의해서 템플릿으로 넘겨줘야 하기 때문.
+질문으로 사용될 여러 개의 question_text를 화면에 보여줘야 하고, URL 링크를 연결하기 위해 question.id도 필요.
+이 두 가지 정보가 함께 들어있는 Question객체를 뷰 함수로부터 넘겨받으면 됩니다.
+정확히는 Question객체들의 리스트가 들어있는 latest_question_list변수를 뷰 함수로부터 템플릿 파일로 전달해야 합니다.
+ch3\polls\views.py
+장고에서 템플릿 파일을 찾을 때, TEMPLATES, INSTALLED_APPS에서 지정된 디렉토리를 검색합니다.
+INSTALLED_APPS 항목의 각 애플리케이션에 대한 템플릿 파일의 위치를 지정해야 합니다.
+그래야 index()함수에서 지정한 polls/index.html을 찾습니다.
+템플릿 파일을 지정할 때 index.html이 아닌 polls/index.html로 지정하는 이유는 애플리케이션 개수가 늘어나고 템플릿
+파일도 점점 많아지면, 애플리케이션은 다르지만 템플릿 파일 이름이 같은 경우가 발생할 수 있습니다.
+이런 경우 템플릿 파일이 충돌나는 것을 방지하기 위해 templates 디렉토리 하위에 다시 애플리케이션명으로 디렉토리를
+만들어 템플릿 파일을 위치시키는 방법을 사용합니다.
+
+단축함수란?
+웹 프로그램 개발 시 자주 사용되는 기능들, 예를 들어 템플릿 코드를 로딩한 후에 컨텍스트 변수를 적용하고,
+그 결과를 HTTPResponse 객체에 담아 반환하는 작업 등의 공통적으로 사용되는 기능들을 장고에서는 이미 개발하여
+render() 내장 함수로 제공하고 있습니다.
+이런 함수를 shortcut이라고 합니다.
+
+3.7.3 뷰 함수 detail() 및 폼 템플릿 작성
+화면의 내용을 템플릿 파일인 detail.html에 입력합니다.
+이번 템플릿에는 라디오 버튼을 보여주고 사용자가 선택할 수 있도록 하기 위한 <form>태그가 들어있습니다.
+ch3\polls\templates\polls\detail.html
+
+Question객체의 choice_set속성은 자주 사용되는 속성입니다. 
+Question과 Choice테이블의 관계는 1:N관계이고, 외래키로 연결되어 있습니다.
+이렇게 1:N관계에서는 1테이블에 연결된 N테이블의 항목들이라는 의미로, xxx_set속성을 디폴트로 제공합니다.
+즉, question.choice_set.all()이라고 하면 Question테이블의 question레코드에 연결된 Choice 테이블의 레코드 모두를 뜻.
+detail.html에서는 템플릿 문법상 메소드 호출을 표시하는 ()를 사용하지 않으므로, question.choice_set.all이라고 표현.
+detail.html파일에서 필요한 변수, detail()뷰 함수에서 정의해야 할 context 변수가 어떤게 있을까요?
+question.text, error_message, question.id, question.choice_set, forloop.counter, choice.id, choice.choice_text 등의
+변수들이 사용되고 있습니다.
+forloop.counter는 장고에서 제공하므로 정의할 필요는 없고, error_message는 detail()함수가 아니므로 vote()에서 정의.
+question.text, question.id, question.choice_set변수들은 각각 컨텍스트 변수로 정의해도 되지만, question 변수만
+정의하면 그 변수의 속성으로 액세스할 수 있으므로 question 컨텍스트 변수 하나만 정의하는 것이 효율적.
+또한 choice.id, choice.choice_text변수들도 question.choice_set 변수가 정의되면 액세스할 수 있습니다.
+결론적으로 detail() 뷰 함수에서 정의해야 할 컨텍스트 변수는 question 변수 하나로 충분.
+이와 같이 템플릿 파일과 뷰 함수의 관계에서 컨텍스트 변수를 찾는다는 것을 우선적으로 알아야 한다.
+
+index.html화면에서 질문 하나를 선택하면 /polls/1/과 같은 URL이 넘어오게 됩니다.
+<li><a href="/polls/{{question.id}}/">{{question.quesiton_text}}</a></li>
+그리고 urls.py에서는
+path('polls/<int:question_id>/', views.detail, name='detail'),
+두 라인에 의해 사용자가 질문 하나를 선택하면 detail() 뷰 함수가 호출되는 것.
+
+대상 객체를 리스트로 가져오는 get_list_or_404() 단축함수도 있습니다.
+get_object_or_404()단축함수는 get()함수를 사용하는데 비해, get_list_or_404()단축함수는 filter() 함수를 사용하고,
+또한 리스트가 비어 있으면 Http404 익셉션을 발생시킴.
+
+3.7.4 뷰 함수 vote() 및 리다이렉션 작성
+vote() 뷰 함수의 호출과 연계된 URL은 detail.html 템플릿 파일에서 받습니다.
+detail.html 템플릿에 있는 폼을 제출하면 폼의 기능에 의해 /polls/5/vote/ 와 같은 URL이 POST 방식으로 넘어옵니다.
+<form action="{% url 'polls:vote' question.id %}" method="post">
+urls.py에는 이와 같이 작성했습니다.
+path('polls/<int:question_id>/vote/', views.vote, name='vote'),
+이 두 라인에 의해 사용자가 Vote 버튼을 누르면 vote() 뷰 함수가 호출되는 것.
+ch3/polls/views.py
+
+URLconf는 일반적으로 URL 스트링과 뷰를 매핑한 각 라인을 URL 패턴이라 하고 이름을 하나씩 부여합니다.
+그런데 그 반대 방향으로 reverse()함수를 사용하여 URL 패턴명으로부터 URL 스트링을 구할 수도 있습니다.
+reverse() 함수의 인자로는 URL 패턴의 이름과 URL 스트링에 사용될 파라미터 2개의 인자를 받습니다.
+reverse() 함수의 동작원리
+URLconf에 정의된 URL 패턴명 = polls:results
+┌───────────────────────────────────────────────────────────────────┐
+│|/polls/<question_id>/results/|------------------>|views.results()|│
+│                                   뷰 함수 매핑                     │
+└───────────────────────────────────────────────────────────────────┘
+                      reverse() 함수로 URL 추출             │
+ |/polls/3/results/|<--------------------------------------┘
+                      reverse('polls:results', args=(3,))            
+reverse() 함수를 사용해 URL을 구하는 것은 URLconf에 이미 정의된 URL 패턴을 활용해서 URL 스트링을 추출하는 방식이므로,
+소스에 URL 스트링을 하드코딩하지 않도록 해줍니다.
+
+3.7.5 뷰 함수 results() 및 템플릿 작성
+results() 뷰 함수의 호출과 연계된 URL은 votes() 뷰 함수의 리다이렉트 결과로 받습니다.
+즉, 폼 데이터를 처리한 후에 그 결과를 보여주는 페이지로 리다이렉트시켜주기 위해 voets() 뷰 함수에서 다음을 실행.
+리다이렉트할 타깃 URL은 /polls/3/results/와 유사한 모습.
+return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+리다이렉트하라는 응답을 받은 웹 브라우저는 리다이렉트 URL로 다시 요청을 보냅니다.
+urls.py에는 다음과 같이 작성했습니다.
+path('polls<int:question_id>/results/', views.results, name='results')
+두 라인에 의해 results() 뷰 함수가 호출됩니다.
+ch3\polls\views.py
+ch3\polls\templates\polls\results.html
+흥미로운 점은 뷰함수와 템플릿 태그 양쪽에서 모두 URL 스트링을 추출할 수 있다는 것.
+뷰 함수에서는 reverse() 함수를 사용하고, 템플릿에서는 {% url %} 태그를 사용.
+{% url 'polls:detail' question.id %}         //템플릿에서
+reverse('polls:detail', args=(question.id,)) //뷰 함수에서 
+
+pluralize는 템플릿 필터이고, {% url %}는 템플릿 태그입니다.
+
+3.7.6 지금까지 작업 확인하기
+정상적으로 잘 되었는지 확인하기 위해 웹 브라우저로 접속.
+runserver를 실행시키고, http://127.0.0.1:8000/polls를 입력
+그러나 현재는 데이터베이스에 데이터가 들어있지 않아 질문이 없는 빈페이지로 나타남.
+데이터의 입력은 Admin 사이트를 사용하면 편리합니다.
+[Questions] 항목의 [Add] 버튼을 클릭하면 질문을 입력하는 화면이 나타납니다.
+그리고 데이터를 입력하면 됩니다.
+입력한 후 상단 경로에서 [Polls] 또는 [Home]을 클릭하면 다시 상위 항목으로 이동할 수 있습니다.
+그리고 동일한 방법으로 Admin 사이트의 첫 화면에서 [Choice]항목의 [Add]를 클릭해 답변 항목을 입력.
+입력한 후에도 변경, 삭제할 수 있으므로 데이터를 입력하면 됩니다.
+Choice테이블에서 ForeignKey 필드인 question 칼럼에, Question 테이블의 question_text가 보입니다.
+Admin 사이트의 장점 중 하나가 장고 애플리케이션 개발 초기부터 웹을 통해 데이터를 확인하면서 데이터 입력, 수정 등의
+처리를 할 수 있다는 것.
+때문에 완료되기 전이라도 상용에 필요한 데이터를 입력해보고 시험해볼 수 있을 뿐 아니라 요구사항에 맞게 계속해서
+개선할 수 있다.
+데이터를 모두 입력한 후에 다시 polls 애플리케이션으로 접속
+에러메시지가 보이는지도 확인.

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+<!--페이지 타이틀이 변경.-->
+<title>{% block title %}Polls Application Site{% endblock %}</title>
+
+{% block sidebar %}
+{{ block.super }}
+<ul>
+    <!--내비게이션에 사용되는 문구를 Polls_Home으로, 링크 URL을 /polls/로 정함.-->
+    <li><a href="/polls/">Polls_Home</a></li>
+</ul>
+{% endblock %}

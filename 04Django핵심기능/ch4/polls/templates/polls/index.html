@@ -1,0 +1,15 @@
+<!--latest-question_list 객체는 index() 뷰 함수에서 넘겨주는 파라미터.-->
+{% if latest_question_list %} 
+    <!--latest_question_list 객체의 내용을 순회하면서 question_text를 순서 없는 리스트로 화면에 보여줍니다.-->
+    <!--(<ul>,<li>태그 역할).-->
+    <!--또한, 각 텍스트에 URL링크를 연결합니다(<a href>속성 역할).-->
+    <!--URL링크는 /polls/3/과 같은 형식.-->
+    <ul>
+        {% for question in latest_question_list %}
+        <li><a href="/polls/{{question.id}}/">{{question.question_text}}</a></li>
+        {% endfor %}
+    </ul>
+<!--만일 latest_question_list 객체에 내용이 없다면, 문장을 화면에 보여줌-->
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}

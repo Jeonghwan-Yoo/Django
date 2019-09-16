@@ -1,0 +1,338 @@
+book 애플리케이션을 만들어 보면서 클래스형 뷰의 사용법을 익히고, 함수형 뷰로 되어 있는 기존의 polls 애플리케이션을
+클래스형 뷰로 변경.
+
+5.1 새로운 애플리케이션 만들기
+books 애플리케이션은 책을 출판하는 데 필요한 정보들인 책, 저자, 출판사에 대한 정보들을 관리하는 웹 애플리케이션.
+새로운 애플리케이션을 만들기 위해 그 상위에 프로젝트를 먼저 만들어야 한다.
+mysite를 그대로 사용하고 그 하위에 books 애플리케이션을 코딩.
+1)애플리케이션 설계하기
+2)프로젝트 뼈대 만들기
+3)애플리케이션 - Model 코딩하기
+4)애플리케이션 - URLconf 코딩하기
+5)애플리케이션 - View 코딩하기
+6)애플리케이션 - Template 코딩하기
+
+5.1.1 애플리케이션 설계하기
+정보를 보여주고 입력, 수정, 삭제할 수 있는 웹 애플리케이션.
+               선택                               선택
+index.html  ----------->   book_list.html   --------------->  book_detail.html
+Book Mgmt System           Book List                          Python Web Programming                
+ㅇBook                     ㅇPython Web Programming           ㅇAuthor:S.H.Kim
+ㅇAuthor                   ㅇDesign Pattern                   ㅇPublisher:HanBit
+ㅇPublisher                ㅇEffective Java                   ㅇPublication date:March 1, 2015
+
+Book 테이블 설계
+칼럼명               타입              제약조건                        설명
+id                   integer          NotNull,PK,AutoIncrement        Primary Key
+title                varchar(100)     NotNull                         책 제목
+authors              integer          NotNull,MTM(Author.id),index    Many-To-Many
+publisher            integer          NotNull,FK(Publisher.id),index  Foreign Key
+publication_date     date             NotNull                         책 출판일
+
+Author 테이블 설계
+칼럼명               타입              제약조건                        설명
+id                   integer          NotNull,PK,AutoIncrement        Primary Key
+salutation           varchar(100)     NotNull                         저자 인사말
+name                 varchar(50)      NotNull                         저자 성명
+email                email            NotNull                         저자 이메일
+
+Publisher 테이블 설계
+칼럼명               타입              제약조건                        설명
+id                   integer          NotNull,PK,AutoIncrement        Primary Key
+name                 varchar(50)      NotNull                         출판사 이름
+address              varchar(200)     NotNull                         출판사 주소
+website              url              NotNull                         출판사 홈페이지
+
+흐름 설계
+URL                  View                        Template
+/books/        ----> BooksModelView.as_view() -> index.html
+/books/book/   ----> BookList.as_view()       -> book_list.html
+/books/book/3/ ----> BookDetail.as_view()     -> book_detail.html
+
+5.1.2 프로젝트 뼈대 만들기 - 애플리케이션 추가
+mysite라는 기존의 프로젝트를 사용하고 거기에 books 애플리케이션만 추가.
+ch5>pytho manage.py startapp books
+프로젝트에 포함되는 모든 애플리케이션은 설정 파일에 등록해야 합니다.
+books 애플리케이션도 settings.py 파일에 등록.
+INSTALLED_APPS 항목에 books 애플리케이션의 설정 클래스인 books.apps.BooksConfig를 등록.
+모듈명인 books를 등록해도 된다.
+
+5.1.3 애플리케이션 - Model 코딩하기
+데이터베이스 관련 작업.
+1)books>notepad models.py //테이블을 정의함
+
+칼럼을 정의할 때는 장고에서 제공하는 필드들을 알아야 합니다. 다양한 필드 타입이 있으므로 필요할 때마다 적절한 필드 타입을 선택.
+
+테이블 간 관계를 나타내는 필드는 ForeignKey, ManyToManyField, OneToOneField 3가지며, N:1, N:N, 1:1 관계를 표시.
+Book테이블과 Author 테이블 간 관계를 N:N으로 정의하고 있습니다.
+한 권의 Book에 여러 명의 Author가 존재할 수 있고, 한 명의 Author는 여러 권의 Book을 쓸 수 있는 관계.
+class Book(models.Model):
+    ...
+    authors = models.ManyToManyField('Author')
+Book테이블과 Publisher 테이블간 관계를 N:1로 정의하고 있습니다.
+한 권의 Book은 하나의 Publisher에만 관련되지만, 하나의 Publisher는 여러 권의 Book과 관련될 수 있는 관계.
+class Book(models.Model):
+    ...
+    publisher = models.ForeignKey('Publisher', on_delete=modles.CASCADE)
+ForeignKey 필드를 사용할 때는 on_delete 옵션을 필수로 지정해야 한다.
+상대 테이블의 레코드가 삭제될 때 본 테이블에서의 동작을 지정하는 옵션.
+CASCADE의 의미는 Publisher 테이블의 특정 레코드가 삭제되면, 그 레코드에 연결된 Book 테이블의 레코드도 삭제된다는 의미.
+
+2)books>notepad admins.py //정의된 테이블이 어드민 화면에 보이게 함
+3)ch5>python manage.py makemigrations //데이터베이스에 변경이 필요한 사항을 추출함
+4)ch5>python manage.py migrate //데이터베이스에 변경사항을 반영함
+5)ch5>python manage.py runserver //현재까지 작업을 개발용 웹서버로 확인함.
+
+5.1.4 애플리케이션 - URLconf 코딩하기
+설계된 뷰 흐름의 내용을 참고해 URLconf를 정의하면 됩니다.
+URLconf는 mysite/urls.py와 books/urls.py 2개의 파일에 코딩.
+기존의 mysite/urls.py 파일에 books 앱의 URL 설정을 불러오는 내용을 추가.
+mysite>notepad urls.py
+
+/book/ URL만 그림에 보여주었는데, books/urls.py파일에는 /book/과 동일한 형식으로 /author/ 및 /publisher/ URL도 정의.
+books>notepad urls.py
+7개의 URL을 정의하고 그에 해당하는 클래스형 뷰 역시 7개를 정의.
+클래스형 뷰로 정의하기 위해 각 URL에 따른 뷰 클래스 및 as_view() 메소드를 지정.
+테플릿 파일도 각각 하나씩 총 7개가 필요.
+참고로 하나의 뷰에서 여러 개의 html 파일을 사용할 수 있고, 그 반대로 동일한 html 파일을 여러 개의 뷰에서 사용할 수 있으므로
+뷰와 템플릿의 개수가 항상 1:1은 아닙니다.
+
+5.1.5 애플리케이션 - 클래스형 View 코딩하기
+클래스형 뷰나 클래스형 제네릭 뷰는 장고 사용 시 매우 중요.
+ch5/books/views.py
+
+데이터베이스 객체의 리스트를 보여주거나, 특정 객체의 상세 내용을 보여주는 작업을 코딩할 때 제네릭 뷰의 장점이 들어남.
+만일 직접 코딩한다면 테이블에 접속하고, 쿼리 조건을 지정하고, 테이블로부터 가져온 결과를 컨텍스트 변수에 담아 템플릿
+시스템에 넘겨줘야 합니다.
+장고에서 복잡한 로직을 장고에서 모두 처리해주고, 버그 가능성도 크게 줄임.
+
+5.1.6 애플리케이션 - Template 코딩하기
+뷰 클래스가 7개이고 템플릿 파일도 7개가 필요.
+디렉토리는 ch5\books\templates\books.
+
+매핑
+URL 패턴               뷰 클래스명       템플릿 파일명            템플릿 설명
+/books/               BooksModelView    index.html              books 애플리케이션 첫 화면
+/books/book/          BookList          book_list.html          책의 리스트를 보여줌
+/books/author/        AuthorList        author_list.html        저자의 리스트를 보여줌
+/books/publisher/     PublisherList     publisher_list.html     출판사의 리스트를 보여줌
+/books/book/3         BookDetail        book_detail.html        특정 책의 상세 정보를 보여줌
+/books/author/3/      AuthorDetail      author_detail.html      특정 저자의 상세 정보를 보여줌
+/books/publisher/3/   PublisherDetail   publisher_detail.html   특정 출판사의 상세 정보를 보여줌
+3은 테이블 레코드의 Primary Key가 채워지는 자리.
+
+각 템플릿 파일에서는 상속 기능을 사욯아고 있습니다.
+부모 템플릿 역할을 하는 base.html, base_books.html.
+/books/index.html
+base_books.html 템플릿을 상속받아 content 블록만을 재정의하였고, 나머지 블록은 부모 템플릿을 그대로 사용.
+뷰로부터 model_list 컨텍스트 변수를 전달받아 model_list에 들어있는 모델명들을 순회하면서 화면에 하나씩 보여줌.
+또한 모델명을 클릭 시 접속할 URL을 추출하기 위해 {% url urlvar %} 템플릿 태그를 사용하고, urlvar 인자는 {% with %} 태그를
+사용하여
+{% with "books:"|add:modelname|lower|add:"_list" as urlvar %}
+add 및 lower 템플릿 필터를 사용해 모델명을 소문자로 변환하고, 필요한 문자열을 붙여줍니다.
+모델명이 Author라면 urlvar는 books:author_list.
+
+공통적으로 base_books.html 템플릿을 상속받고 있고, 뷰로부터 object_list 컨텍스트 변수를 전달받아 object_list에 들어있는
+객체들을 순회하면서 하나씩 보여주고 있다.
+상속을 받는 하위 템플릿 파일에서는 {% block content %}블록만 재정의하고, 나머지 부분은 부모 base_books.html 템플릿 내용을
+그대로 사용하고 있다.
+/books/book_list.html
+화면에 book 객체의 title 속성을 표시하고 해당 텍스트를 클릭하는 경우, <a href> 태그 기능에 의해 books:book_detail URL 패턴으로
+웹 요청을 보낸다는 의미.
+<li><a href="{% url 'books:book_detail' book.id %}">{{ book.title }}</a></li>
+
+author_list.html 템플릿 파일은 화면에 표시하는 내용이 {{ author.name }}이란 점만 다르다.
+/books/author_list.html
+
+publishesr_list.html 템플릿 파일도 거의 동일.
+/books/publisher_list.html
+
+특정 레코드에 대한 상세 정보를 보여주는 템플릿 파일들.
+공통적으로 base_books.html 템플릿을 상속받고, 특정 레코드를 object라는 컨텍스트 변수로 전달받아서 object객체, 즉 레코드에
+들어있는 컬럼값들을 보여주고 있습니다.
+상속받는 하위 템플릿 파일에서는 {% block content %} 블록만 재정의하고, 나머지 부분은 부모 base_base.html 템플릿 그대로.
+/books/book_detail.html
+Book 테이블에 들어있는 특정 레코드, 즉 특정 책의 상세 정보를 표시하고 있다.
+object.authors.all() 구문은 object에 연결된 authors 모두라는 의미로, object는 뷰에서 넘어온 특정 Book 객체를 지칭.
+템플릿 문법상 메소드 호출을 하는 ()는 사용하지 않습니다.
+또한 책의 저자가 여러 명일 수 있으므로, 공동 저자인 경우 저자 이름 뒤에 콤마(,) 를 출력하는 로직이 추가.
+{% if not forloop.last %}, {% else %}{% endif %}
+
+books\author_detail.html
+books\publisher_detail.html
+
+5.1.7 애플리케이션 - Template 상속 기능 추가
+base.html 템플릿에서는 상속용으로 {% block title %}, {% block sidebar %}, {% block content %} 3개의 블록을 정의.
+base_books.html 템플릿은 base.html 템플릿을 상속받아 이 중 title 블록과 sidebar 블록을 재정의.
+_list.html, _detail.html, index.html에서는 content 블록만 재정의.
+결과적으로 장고에선 일반적으로 권고하고 있는 3단계 템플릿 상속 구조.
+base.html <--- base_books.html <--- xxx_detail.html 등
+          상속                  상속
+
+base.html과 base_books.html은 부모 템플릿 역할을 하며, 공통 템플릿입니다.
+그러므로 /ch5/templates 디렉토리에.
+base_book.html파일은 books 애플리케이션에 종속된 것으로 보고 books 앱 템플릿 디렉토리에 두기도 한다.
+디렉토리의 위치는 settings.py에서 TEMPLATES 항목으로 정의한 디렉토리.
+TEMPLATES = [
+    'DIRS':[os.path.join(BASE_DIR, 'templates')],
+]
+templates\base.html
+{% load static %} 템플릿 태그는 static이라는 사용자 정의 태그를 로딩해주고, 그 다음에 {% static %} 사용자 정의 태그를 통해
+admin/css/base.css 스타일시트 파일을 찾게 됩니다.
+이는 장고의 Admin 사이트에서 사용하는 스타일시트를 사용해 룩앤필을 보여주는 효과.
+
+templates\base_books.html
+base.html템플릿을 상속받아서 이 중 title 블록과 sidebar 블록을 재정의하고 있습니다.
+{{ block.super }} 템플릿 변수의 의미는 부모 base.html 템플릿에서 정의한 내용을 하위 base_books.html 템플릿에서 재사용한다는 의미.
+즉, sidebar 블록은 최종적으로
+{% block sidebar %}
+<ul>
+    <li><a href="/">Project_Home</a></li>
+    <li><a href="/admin/">Admin</a></li>
+</ul>
+<ul>
+    <li><a href="/books">Books_Home</a></li>
+</ul>
+{% endblock %}
+
+5.1.8 지금까지 작업 확인하기
+runserver를 실행하고 Admin 사이트에 접속.
+Admin 사이트에 Books, Authors, Publishers 항목의 Add를 눌러 데이터를 입력합니다.
+Books
+Title                    Authors        Publisher               Publication date
+Python Web Programming   Kim Seok Hun   Hanbit Media, Inc.      2015-03-01
+Design Patterns          Eric Gamma     O'Reilly                2005-12-25
+Effective Java           Joshua Bloch   Pearson Education, Inc. 2008-09-02
+
+Author
+Name            Salutation                Email                    Publication date
+Kim Seock Hun   I'm a python programmer   shkshya@daum.net         2015-03-01
+Eric Gamma      Welcome to Gang of Four   ericgamma@gamil.com      2005-12-25
+Joshua Bloch    Java Great Programer      joshua@gmail.com         2008-09-02
+
+Publisher
+Name                     Address            Website
+Hanbit Media, Inc.       Seoul, Korea       http://www.hanb.co.kr/
+O'Reily                  Sanfrancisco, US   http://www.oreily.com/
+Pearson Education, Inc.  United States      http://pearson.com/
+
+http://127.0.0.1:8000/books
+네비게이션 항목도 클릭해서 확인.
+Project_Home은 아직 코딩되지 않았다.
+
+5.2 프로젝트 첫 페이지 만들기
+프로젝트 첫 페이지인 루트(/) URL에 대한 처리 로직을 코딩.
+
+5.2.1 프로젝트 첫 페이지 설계
+home.html  
+ㅇProject_Home
+ㅇAdmin
+shkim Django Apps
+ㅇpolls ---> polls/index.html
+ㅇbooks ---> books/index.html
+
+뷰 흐름 설계
+URL   View                  Template
+/  -> HomeView.as_view() -> home.html
+
+5.2.2 URLconf 코딩하기
+테이블은 변경사항이 없으므로 모델 코딩은 필요 없다.
+애플리케이션에 대한 URL이 아닌 프로젝트에 대한 URL이므로 mysite/urls.py 파일에 루트(/) URL 및 임포트 문장 추가.
+mysite/urls.py
+
+5.2.3 View 코딩하기
+뷰 이름은 HomeView라고 정의했다.
+프로젝트와 관련된 뷰이므로, mysite/views.py 파일에 코딩.
+mysite/views.py
+
+5.2.4 Template 코딩하기
+home.htmo 은 프로젝트 템플릿이므로, 상속에 사용하는 부모 템플릿의 위치와 동일하게.
+ch5\templates
+home.html 템플릿에서는 base_books.html이 아닌 base.html 템플릿을 상속 받는다.
+ch5\templates\home.html
+뷰로부터 app_list 컨텍스트 변수를 전달받아 app_list에 들어있는 애플리케이션명들을 하나씩 순회하면서 화면에 보여줌.
+또한, 애플리케이션명을 클릭시 접속할 URL을 추출하기 위해 {% url urlvar %} 템플릿 태그를 사용하였고, urlvar 인자는
+{% with %} 태그를 사용했다.
+{% with appname|add:":"|add:"index" as urlvar %}
+이 문장은 add 템플릿 필터를 사용해 애플리케이션 명에 필요한 문자열을 붙여주고 있다.
+만일 books라면 urlvar는 books:index
+
+5.2.5 지금까지 작업 확인하기
+runserver를 실행해 루트(/) URL로 접속
+http://127.0.0.1:8000/
+
+5.2.6 apps.py 활용 맛보기
+프로젝트 전반적인 항목들을 설정하는 곳은 settings.py이고, 각 앱마다 필요한 항목을 설정할 수 있는 곳은 apps.py이다.
+장고 공식 문서를 보면 apps.py 파일의 용도로 앱 이름에 대한 별칭(verbose_name)을 정의하거나 시그널(signal) 수신자를 등록.
+polls, books라는 앱 이름을 소스에 하드코딩하고 있는데, apps.py 파일을 이용하면 하드코딩을 개선할 수 있다.
+books\apps.py
+books 앱의 설정 클래스인 BooksConfig의 속성 중 하나인 verbose_name을 정의.
+이외에도 path, label 등의 속성.
+mysite\views.py
+마지막으로 templates/home.html
+파일 수정이 완료되면 runserver를 실행하고 루트 URL에 접속해 첫 페이지 화면을 확인.
+
+settings.py 파일의 INSTALLED_APPS 항목을 수정하고 실행해봅니다.
+mysite\settings.py
+settings.py파일에 앱을 등록 시 설정 클래스가 아닌 모델명으로 등록하면, books앱의 별칭이 Book-Author-Publisher App 대신
+Books로 보임.
+이는 books 앱의 설정 클래스를 찾을 수 없어, 그 대신에 장고가 제공하는 디폴트 설정 클래스인 AppConfig를 사용하기 때문.
+이런 이유로 INSTALLED_APPS 항목에 앱을 등록 시 모듈명이 아닌 설정 클래스로 등록하는 것이 더 정확한 방법.
+
+5.3 polls 애플리케이션 - 클래스형 뷰로 변경하기
+테이블에는 변경사항이 없어 모델 코딩은 필요없고, URLconf 코딩.
+
+5.3.1 URLconf 코딩하기
+기존에 URL 패턴별 함수형 뷰로 매핑했던 사항을 클래스형 뷰로 변경해 매핑해주면 된다.
+
+URL 패턴            기존 뷰 이름(함수형 뷰)    새로운 뷰 이름(클래스형 뷰)     변경사항(템플릿 파일 명은 동일함)
+/polls/             index()                  IndexView                     뷰와 템플릿 모두 변경함(index.html)
+/polls/99/          detail()                 DetailView                    뷰와 템플릿 모두 변경함(detail.html)
+/polls/99/results/  results()                ResultsView                   뷰와 템플릿 모두 변경함(results.html)
+/polls/99/vote/     vote()                   vote()                        뷰와 템플릿 모두 변경사항 없음
+
+polls/urls.py
+
+5.3.2 View 코딩하기
+클래스형 제네릭 뷰를 상속받을 것이므로 코딩량은 줄어든다.
+클래스형 뷰를 코딩할 때 가장 먼저 고려해야 할 사항이 어떤 제네릭 뷰를 사용할 것이냐 하는 것.
+개발하고자 하는 애플리케이션의 로직을 분석해보고 가장 적합한 제네릭 뷰를 찾을 수 있어야 한다.
+
+URL 패턴            기존 뷰 이름(함수)  새로운 뷰 이름(클래스)  제네릭 뷰 선택
+/polls/             index()           IndexView              질문 리스트를 보여주는 로직이므로 ListView를 사용.
+                                                             (테이블에서 복수의 레코드를 가져오는 경우)
+/polls/99/          detail()          DetailView             질문 하나에 대한 세부 내용을 보여주는 로직이므로, DetailView.
+                                                             (테이블에서 특정 한 개의 레코드를 가져오는 경우)
+/polls/99/results/  results()         ResultsView            투표 결과도 각 질문에 대한 세부 정보에 해당, DetailView.
+                                                             (테이블에서 특정 한 개의 레코드를 가져오는 경우)
+/polls/99/vote/     vote()            vote()                 뷰와 템플릿 모두 변경사항 없음.
+
+polls/views.py
+vote() 뷰 함수도 제네릭 뷰로 변경할 수 있습니다.
+
+5.3.3 Template 코딩하기
+부모 템플릿이 되는 base.html을 상속받은 base_polls.html을 만들고, 기존 각 템플릿 파일에서 base_polls.html을 상속.
+ch5\templates\base_polls.html
+polls 애플리케이션을 위해 새로 추가된 파일.
+
+각 페이지별 템플릿 파일에 대한 수정.
+polls/templates/index.html
+polls/templates/detai.html
+polls/templates/results.html
+
+5.3.4 로그 추가하기
+로그를 남기기위해서는 우선 settings.py 파일에 로깅 설정.
+그리고 나서 로거를 취득하고 로그 기록을 원하는 곳에서 로거의 메소드를 호출.
+ch5\mysite\settings.py
+디폴트 설정유지 소스와 거의 동일하고 다른 점은 django 로거를 오버라이딩하지 않았다는 점.
+즉 장고의 디폴트 설정 그대로 django 로거를 사용하고 있습니다.
+또 mysite 로거 이름 대신에 polls라는 로거 이름으로 바꿨습니다.
+이것은 views.py 파일에서 __name__변수로 로거를 취득하기 위함.
+
+로그를 기록하기 위한 작업으로
+polls/views.py
+
+5.3.5 지금까지 작업 확인하기
+polls 애플리케이션을 포함한 mysite 프로젝트 개발을 완료.
+runserver를 실행 후에 루트 URL로 접속.
+로그 기능 동작을 확인하기 위해 polls 애플리케이션에서 투표.

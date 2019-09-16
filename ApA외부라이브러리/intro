@@ -1,0 +1,14 @@
+외부 라이브러리 requests, beautifulsoup4 맛보기
+웹 요청을 보내고 받는 기능을 하는 requests 라이브러리와 서버로부터 받은 데이터를 분석하는데 사용하는 beautifulsoup4.
+사용 방법이 직관적이고, 이해하기 쉬운 문법을 제공.
+
+A.1 외부 라이브러리 설치
+외부 라이브러리이기 때문에 설치가 필요.
+>pip install requests
+>pip install beautifulsoup4
+
+A.2 urllib.request 모듈 예제 재작성
+parse_image_2.py
+
+A.3 http.client 모듈 예제 재작성
+download_image_2.py

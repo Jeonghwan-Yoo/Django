@@ -1,0 +1,38 @@
+{# 질문을 제목으로 사용하기 위해 폰트 크기를 <h1>로 지정 #}
+<h1>{{question.question_text}}</h1>
+
+{# 에러가 있으면 에러 메시지를 굵은 글자로 화면에 보여줍니다. #}
+{# 에러를 체크하는 로직은 vote() 뷰 함수에 있습니다. #}
+{# vote() 뷰 함수에서 익셉션이 발생하면 error_message를 담아서 detail.html 템플릿을 랜더링하고, #}
+{# 그에 따라 지금 보고 있는 detail.html 템플릿에서 에러 메시지를 굵은 글자로 보여주게 됩니다. #}
+{% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
+
+{# 폼에 입력된 데이터는 POST 방식으로 보냅니다. #}
+{# 서버 측의 데이터를 변경하는 경우, 일반적으로 GET이 아니라 POST 방식을 사용합니다. #}
+{# url태그를 사용해 받을 곳의 URL을 polls:vote로 지정하였습니다. #}
+{# polls:vote는 URLconf에서 정의한 URL 패턴 이름입니다.(name='vote') #}
+{# 동일한 이름으로 인한 충돌을 피하기 위해 이름 공간을 추가해서 polls:vote가 된 것. #}
+{# URL에 대한 이름공간은 polls/urls.py 파일의 app_name에 정의 #}
+{# 받는 곳의 URL은 /polls/7/vote/와 같은 형식 #}
+<form action="{% url 'polls:vote' question.id %}" method="post">
+    {# 폼을 처리하는 경우, 보안 측면에서 CSRF(Cross Site Request FOrgery) 공격을 주의해야 합니다. #}
+    {# 장고는 이를 방지하기 위한 기능으로 csrf_token템플릿 태그를 사용하면 간단히 해결 #}
+    {# <form>태그 다음에 넣어주면 됩니다. #}
+    {% csrf_token %}
+    {# for태그로 뷰 함수에서 넘어온 객체를 순회하고 있습니다. #}
+    {# index() 뷰에서처럼 이번 detail() 뷰 함수에서도 Question 객체를 템플릿으로 넘겨주고 있습니다. #}
+    {# 뷰 함수를 작성할 때 템플릿에게 무엇을 넘겨줄지는 항상 숙고해야 합니다. #}
+    {# question.choice_set.all의 의미는 Question객체의 choice_set속성에 들어있는 항목 모두를 뜻합니다. #}
+    {% for choice in question.choice_set.all %}
+    {# 라디오 버튼으로 답변 항목을 보여주고 있습니다. #}
+    {# 해당 라디오 버튼을 선택하면, POOST 데이터가 'choice'='3'(choice.id) 형태로 구성되도록 name과 value속성을 정의 #}
+    <input type="radio" name="choice" id="choice{{forloop.counter}}" value="{{choice.id}}" />
+    {# forloop.counter 변수는 for 루프를 실행한 횟수를 담고 있는 템플릿 변수입니다. #}
+    {# <label for> 속성과 <input id>속성은 값이 같아야 서로 바인딩됩니다. #}
+    <label for="choice{{forloop.counter}}">{{choice.choice_text}}</label><br/>
+    {% endfor %}
+    {# Vote버튼을 클릭하면 사용자가 선택한 폼 데이터가 POST 방식으로 polls:vote URL로 전송됩니다. #}
+    {# 전송된 데이터는 vote() 뷰 함수에서 request.POST['choice']구문으로 액세스합니다. #}
+    {# <input>태그의 name과 value속성값들이 request.POST 사전에 key, value로 사용된다. #}
+    <input type="submit" value="Vote"/>
+</form>

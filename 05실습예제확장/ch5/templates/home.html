@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>shkim Django Applications</h2>
+    <!--
+    <ul>
+        {% for appname in app_list %}
+{% with appname|add:":"|add:"index" as urlvar %}
+            <li><a href="{% url urlvar %}">{{ appname }}</a></li>
+{% endwith %}
+        {% endfor %}
+    </ul>
+    -->
+    <ul>
+        <!--뷰로부터 전달 받은 컨텍스트 변수 verbose_dict 사전을 순회하기 위해 items() 메소드를 호출-->
+        <!--템플릿 문법에서는 함수 호출을 의미하는 ()를 사용하지 않으므로 주의-->
+        <!--key에는 설정 클래스의 label 속성값이, value에는 설정 클래스의 verbose_name 속성값이 들어있다.-->
+        {% for key, value in verbose_dict.items %}
+            <!--{{value}} 즉 앱의 별칭을 클릭 시 접속할 URL을 만들기 위해 url템플릿 태그 및 add 템플릿 필터사용.-->
+            <li><a href="{% url key|add:':index' %}">{{ value }}</a></li>
+        {% endfor %}
+    </ul>
+    
+{% endblock content %}

@@ -1,0 +1,168 @@
+SQLite 데이터베이스는 작고 가벼워서 사용하기 쉽지만 대규모 프로젝트에서는 거의 사용하지 않습니다.
+SQlite는 메모리, 디스크 등 서버 자원을 적게 차지하지만 멀티 프로세스 환경에서의 동시 접근 처리 능력 등이 약해 보통은
+테스트 용도나 소규모의 프로젝트, 스마트폰이나 임베디드 환경에 주로 사용.
+큰 규모의 프로젝트에서는 다른 엔터프라이즈급 데이터베이스를 주로 사용하는데, 장고에서는 MySQL(Maria DB포함), PostgreSQL,
+Oracle 데이터베이스를 공식적으로 지원하고 있습니다.
+
+B.1 MySQL 데이터베이스 연동
+장고에서는 MySQL 5.5이상의 버전을 지원합니다.
+
+B.1.1 연동 드라이버 설치
+파이썬에 MySQL 데이터베이스 연동을 위한 연동 드라이버 모듈은 여러 가지가 존재하는데, 장고는 2가지 연동 드라이버를 지원합니다.
+mysqlclient:예전의 MySQLdb 드라이버를 개선한 패키지로, 장고에서 추천하는 드라이버입니다.
+mysqlclient 1.3.7이상의 버전이 필요합니다.
+MySQL Connector/Python:MySQL 개발사인 오라클에서 제공하고 있는 드라이버로, 장고의 공식 도큐먼트에는 최신 버전은 지원하지
+않을 수도 있다고 한다.
+
+B.1.2 settings.py 파일 수정
+장고의 settings.py 파일의 DATABASES 항목에 MySQL 데이터베이스를 사용한다고 지정합니다.
+MySQL 프로그램 설치시 디폴트로 생성되는 계정을 사용하는데, 개발자가 별도로 만들어서 지정할 수도 있습니다.
+DATABASES = {
+    'default':{
+        'ENGINE':'django.db.backends.mysql',
+        'NAME':'test',
+        'USER':'root',
+        'PASSWORD':'rootpswd',
+        'HOST':'127.0.0.1',
+        'PORT':'3306',
+    }
+}
+
+ENGINE:MySQL 엔진을 사용한다는 의미로, django.db.backends.mysql처럼 입력합니다. 장고에서 제공하는 MySQL 엔진의 모듈경로입니다.
+NAME:장고에서 사용할 MySQL 내의 데이터베이스 이름을 입력합니다. 데이터베이스 test는 MySQL 프로그램 설치 시 기본으로 생성되는데,
+버전에 따라 없을 수도 있습니다. 보통은 직접 데이터베이스를 만들어 사용합니다.
+USER:장고에서 MySQL 데이터베이스에 연결 시 사용할 유저 이름입니다. 즉, 사용하는 유저 이름을 입력하면 됩니다. 유저 root는
+MySQL 프로그램 설치 시 기본으로 생성됩니다.
+$ mysql -u root -p
+PASSWORD:장고에서 MySQL 데이터베이스에 연결 시 사용할 유저 이름에 대한 패스워드를 입력합니다.
+$ mysql -u root -prootpswd
+HOST:MySQL 서버가 실행하고 있는 머신의 IP 주소를 입력합니다. 장고와 동일 머신에서 MySQL 서버가 실행되고 있으면, 127.0.0.1
+이라고 써도 되고, 생략해도 됩니다.
+PORT:MySQL 서버에 접속할 때 사용하는 포트번호입니다. MySQL 서버의 디폴트 포트번호인 3306을 그대로 사용하는 경우는 생략.
+
+참고로 MySQL 명령을 사용해 새로운 데이터베이스 및 MySQL 계정과 비밀번호를 만들어서 사용할 수도 있다.
+$ mysql -u root -p
+(root 계정에 대한 패스워드 입력)
+mysql> CREATE DATABASE dj_test CHARACTER SET UTF8;
+mysql> CREATE USER django@localhost IDENTIFIED BY 'pswd';
+mysql> GRANT ALL PRIVILEGES ON dj_test.* TO django@localhost;
+mysql> FLUSH PRIVILEGES;
+이 경우에는 DATABASES 항목에 다음과 같이 입력
+NAME:dj_test
+USER:django
+PASSWORD:pswd
+
+B.1.3 변경사항 장고에 반영하기
+데이터베이스와 관련하여 변경사항이 발생하면, 장고에 반영해줘야 합니다.
+manage.py 파일이 있는 디렉토리로 이동한 후 실행해야 한다.
+$ python manage.py migrate
+또한 데이터베이스 엔진을 새로 설정하면 초기화된 상태가 되므로, 장고 Admin사이트에 로그인하기위한 관리자를 새로만들어야 한다.
+$ python manage.py createsuperuser
+
+B.1.4 작업 확인하기
+장고 runserver를 실행 시 에러가 나지 않는다면 데이터베이스 연동이 정상적으로 동작하는 것.
+$ python manage.py runserver 0:8000
+MySQL 데이터베이스에 테이블들이 잘 생성되었는지 확인하면 됩니다.
+http://127.0.0.1:8000/admin
+
+B.2 PostgreSQL 데이터베이스 연동
+장고에서는 PostgreSQL 9.3 이상의 버전을 지원.
+
+B.2.1 연동 드라이버 설치
+파이썬에서 PostgreSQL 데이터베이스 연동을 위한 연동 드라이버 모듈은 여러 가지가 존재하는데, 장고는 psycopg2 패키지가 필요하므로
+장고가 설치된 서버에 psycopg2 최신 버전을 설치합니다.
+장고에서는 psycopg2 2.5.4이상의 버전을 추천
+
+B.2.2 settings.py 파일 수정
+장고의 settings.py 파일의 DATABASES 항목에 PostgreSQL 데이터베이스를 사용한다고 지정합니다.
+PostgreSQL 프로그램 설치 시 디폴트로 생성되는 계정을 사용하였는데, 개발자가 별도로 계정을 만들어서 지정할 수도 있습니다.
+DATABASES = {
+    'default':{
+        'ENGINE':'django.db.backends.postgresql',
+        'NAME':'postgres',
+        'USER':'postgres',
+        'PASSWORD':'postgrespswd',
+        'HOST':'127.0.0.1',
+        'PORT':'5432',
+    }
+}
+
+ENGINE:PostgreSQL 엔진을 사용한다는 의미로, django.db.backends.postgresql처럼 입력. 장고에서 제공하는 PostgreSQL
+엔진의 모듈 경로입니다.
+NAME:장고에서 사용할 PostgreSQL 내의 데이터베이스 이름을 사용합니다. 데이터베이스 postgres는 PostgreSQL 프로그램 설치 시
+기본으로 생성.
+USER:장고에서 PostgreSQL 데이터베이스에 연결 시 사용할 유저 이름입니다. PostgreSQL 데이터베이스는 기본 사용자로 postgres
+유저를 사용합니다. 쉘에서 postgres로 로그인할 때 사용하는 유저 이름을 입력합니다.
+$ su - postgres
+PASSWORD:장고에서 PostgreSQL 데이터베이스에 연결 시 사용할 유저 이름에 대한 패스워드를 입력합니다.
+즉, 쉘에서 postgres 유저로 로그인할 때 사용하는 패스워드를 입력해주면 됩니다.
+$ su - postgres
+HOST:PostgreSQL 서버가 실행되고 있는 머신의 IP 주소를 입력합니다. 장고와 동일 머신에서 PostgreSQL 서버가 실행되고 있으면
+127.0.0.1이라고 입력하거나 생략합니다.
+PORT:PostgreSQL 서버에 접속할 때 사용하는 포트번호입니다. PostgreSQL 서버의 디폴트 포트번호인 5432를 그대로 사용하는 경우는
+생략해도 됩니다.
+
+참고로 PostgreSQL 명령을 사용해 새로운 데이터베이스 및 계정과 비밀번호를 만들어서 사용할 수도 있습니다.
+$ su - postgres
+(postgres 계정에 대한 패스워드 입력)
+$ psql -U postgres
+postgres=# CREATE DATABASE dj_test;
+postgres=# CREATE USER django WITH PASSWORD 'pswd';
+postgres=# ALTER ROLE django SET client_encoding TO 'utf8';
+postgres=# ALTER ROLE django SET default_transaction_isolation TO 'read committed';
+postgres=# ALTER ROLE django SET timezone TO 'Asia/Seoul';
+postgres=# GRANT ALL PRIVILEGES ON DATABASE dj_test TO django;
+이 경우에는 DATABASES 항목에 다음과 같이 입력합니다.
+NAME:dj_test
+USER:django
+PASSWORD:pswd
+
+B.2.3 장고에 반영 및 확인하기
+
+B.3 Oracle 데이터베이스 연동
+장고에서는 Oracle Database Server 12.1 이상의 버전을 지원.
+
+B.3.1 연동 드라이버 설치
+파이썬에서 Oracle 데이터베이스 연동을 위한 연동 드라이버 모듈인 cx_Oracle 패키지를 최신 버전으로 설치합니다.
+장고에서는 cx_Oracle 5.2 이상의 버전을 추천하고 있습니다.
+
+B.3.2 settings.py 파일 수정
+장고의 settings.py 파일의 DATABASES 항목에 Oracle 데이터베이스를 사용한다고 지정해줍니다.
+Oracle 프로그램 설치 시 디폴트로 생성되는 계정을 사용하였는데, 개발자가 별도로 계정을 만들어서 지정할 수도 있습니다.
+DATABASES = {
+    'default':{
+        'ENGINE':'django.db.backends.oracle',
+        'NAME':'xe',
+        'USER':'scott',
+        'PASSWORD':'tiger',
+        'HOST':'',
+        'PORT':'',
+    }
+}
+
+ENGINE:Oracle 엔진을 사용한다는 의미로, django.db.backends.oracle처럼 입력. 장고에서 제공하는 Oracle 엔진의 모듈경로.
+NAME:장고가 클라이언트 입장에서 접속할 Oracle 서버의 데이터베이스에 대한 서비스 이름 또는 인스턴스의 SID(System ID)를
+입력합니다. 보통은 서비스 이름과 SID를 동일하게 xe, orcl등을 사용합니다. 서비스 이름을 알려면
+SQL> show parameter service_names
+USER:장고에서 Oracle 데이터베이스에 연결 시 사용할 유저 이름입니다. $ sqlplus scott/tiger처럼 데이터베이스에 접속할 때,
+유저 이름은 scott입니다.
+PASSWORD:장고에서 Oracle 데이터베이스에 연결 시 사용할 유저 이름에 대한 패스워드를 입력합니다.
+$ sqlplus scott/tiger처럼 데이터베이스에 접속할 때, 패스워드는 tiger입니다.
+HOST:공란으로 둡니다. 공란으로 두면 오라클의 설정 파일인 tnsnames.ora 파일을 사용합니다.
+$ORACLE_HOME/network/admin/tnsnames.ora 파일에는 데이터베이스 서버의 HOST, PORT 항목이 정의되어 있습니다.
+PORT:공란으로 둡니다. 그러면 오라클의 설정 파일인 tnsnames.ora 파일을 사용합니다. 설정 파일을 사용하지 않는 경우는
+HOST와 PORT 항목을 지정합니다. 단 HOST와 PORT 항목을 모두 공란으로 두거나 아니면 둘 다 지정해야 합니다.
+
+Oracle 데이터베이스 명령을 사용하여 새로운 계정과 비밀번호를 만들어서 사용할 수도 있습니다.
+$ su - oracle
+(oracle 계정에 대한 패스워드 입력)
+$ sqlplus / as sysdba
+SQL> CREATE TABLESPACE ts_django DATAFILE '$ORACLE_HOME/rdbms/dbs/ts_django.dbf' SIZE 40M ONLINE;
+SQL> CREATE USER django IDENTIFIED BY pswd DEFAULT TABLESPACE ts_django TEMPORARY TABLESPACE temp QUOTA 10M ON ts_django;
+SQL> GRANT connect, resource TO django;
+이 경우에는 DATABASES 항목에 다음과 같이 입력합니다.
+NAME:xe
+USER:django
+PASSWORD:pswd
+
+B.3.3 장고에 반영 및 확인하기

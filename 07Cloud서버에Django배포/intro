@@ -1,0 +1,169 @@
+클라우드 서비스는 인터넷에 있는 서버를 빌려서 사용하는 것.
+클라우드 서비스는 보통 필요한 만큼 서버 자원을 빌려 쓰고, 쓴 만큼 비용을 지불하는 방식.
+장고 웹 프로그램을 개발한 후에 운영 서버를 준비하고 개발한 프로그램을 배포해야 합니다.
+서버 H/W가 있다면 사용하면 되고 없다면 클라우드 서버를 사용.
+AWS, Digital Ocean, Heroku, PythonAnywhere 등등.
+PythonAnywhere 사이트를 활용할 예정.
+상용으로 운영하려면 유료이면서 더 안정적인 클라우드 서비스를 선택.
+
+클라우드 서버에서 리눅스 실습
+대부분의 클라우드 서버는 리눅스 OS를 사용합니다. 클라우드 서버에서는 배포뿐 아니라 개발까지도 가능.
+
+7.1 PythonAnywhere 사이트에 가입하기
+사이트에가서 Beginner로 가입.
+Beginner는 도메인명을 바꿀 수 없고, 장고 앱도 하나만 실행.
+트래핑량도 제한적.
+Email은 계정 생성을 컨펌하기 위해 필요하고, 비밀번호는 Username에 대한 비밀번호.
+Username으로 도메인명이 결정된다.
+skhim으로 했다면 shkim.pythonanywhere.com.
+Warning 메시지는 가입 시 등록한 이메일에서 컨펌해주면 나타나지 않습니다.
+Dashboard:사이트에 대한 CPU 사용량 등, 전체 현황을 보여줍니다.
+Consoles:Bash 쉘이나 파이썬 쉘을 작업할 수 있는 터미날 창을 오픈.
+Files:파일과 디렉토리를 보거나, 새로 만들 수 있 습니다. 파일 업로드도 가능.
+Web:장고 앱을 실행하기 위해 필요한 항목을 설정할 수 있습니다.
+Tasks:리눅스 cron 명령처럼 주기적인 태스크를 실행하기 위한 메뉴입니다.
+Databases:MySQL 데이터베이스를 사용하기 위한 메뉴. 유료 계정인 경우 PostgreSQL 데이터베이스도 사용할 수 있다.
+
+7.2 장고 소스 가져오기
+~\ch5 디렉토리의 소스를 PythonAnywhere 서버에 배포.
+PythonAnywhere 사이트는 파일 업로드 기능이 있으므로, 장고 소스를 zip파일로 압축하고 PythonAnywhere 서버로 업로드.
+
+GitHub에서 장고 소스 가져오기
+git명령으로 장고 소스를 가져올 수도 있습니다. GitHub는 인터넷 소스 저장소로 개발자라면 거의 필수로 사용.
+소스를 가져오는 기능만 본다면 PythonAnywhere 사이트의 업로드 기능이 좀 더 간단.
+
+~\ch5 디렉토리를 압축하고 파일명은 ch5.zip.
+PythonAnywhere 서버에서 Files 메뉴로 이동합니다.
+디렉토리(/home/shkim) 하위에 pyBook디렉토리, 그 하위에 ch7 디렉토리를 만들고, ch7디렉토리에 ch5.zip파일을 업로드.
+홈 디렉토리는 /home/Username 형태로 사용자에 따라 다르다.
+
+7.3 리눅스 명령으로 압축 풀기
+장고 소스를 가져왔으니 압축을 풀고, PythonAnywhere 서버에서 필요한 소스 작업을 추가로 진행.
+소스 작업은 Consoles 메뉴에서 터미널 창을 열고 진행.
+Consoles 메뉴를 클랙해 나오는 화면에서 Bash 링크를 클릭.
+Bash 터미널 창이 열리면 리눅스 명령으로 장고 개발을 할 수 있습니다.
+먼저 ch5.zip 파일이 존재하는 것을 확인
+# 현재 디렉토리의 경로를 확인합니다.
+$ pwd
+# ch7 데릭토리로 이동합니다.
+$ cd /home/shkim/pyBook/ch7
+# ch7 디렉토리 하위에 ch5.zip 파일이 있는지 확인합니다.
+$ ls -al
+이제 압축 파일을 풀어 장고 ch7 프로젝트의 디렉토리 및 파일들을 구성.
+$ cd /home/shkim/pyBook/ch7
+$ unzip ch5.zip
+$ tree -L 2
+압축을 풀고 tree 명령으로 결과를 볼 수 있다.
+
+7.4 가상 환경 만들기
+장고를 포함한 일반적인 파이썬 프로젝트 개발 시에는 가상 환경을 만들고 개발합니다.
+가상 환경이 필요한 주된 이유는 여러 파이썬 프로그램이 버전만 다른 라이브러리를 사용할 경우 발생하는 충돌을 방지하기 위함.
+또한 리눅스에서 제공하는 기본 파이썬은 2.x버전인데, 별도의 가상 환경을 만들면 파이썬 3.x버전을 설치하여 실습할 수 있다.
+PythonAnywhere 서버에서 파이썬 3.6을 사용하기 위해 가상 환경을 만들고 실습.
+v3PyBook이라는 가상 환경을 만들고, 그 가상 환경으로 진입.
+# 가상 환경을 모아둘 디렉토리 VENV를 만들고 그 디렉토리로 이동합니다.
+$ cd /home/shkim/
+$ mkdir VENV
+$ cd VENV
+# 파이썬 3.6을 사용하는 가상 환경 v3PyBook을 만듭니다.
+$ virtualenv --python python3.6 v3PyBook
+# v3PyBook 가상 환경 안으로 진입합니다.
+$ source /home/shkim/VENV/v3PyBook/bin/activate
+# 가상 환경 내에 있다는 것을 알려주기 위해 프롬프트에 v3PyBook이 표시.
+# 가상 환경에서 사용하는 파이썬 버전을 확인합니다.
+(v3PyBook) $ python -V
+# 가상 환경에서 빠져나오는 명령입니다.
+# 이 명령이 실행되면 프롬프트가 바뀌면서 가상 환경 밖에 있음을 알려줍니다.
+(v3PyBook) $ deactivate
+$
+가상 환경을 만들었으니 이후의 작업은 모두 가상 환경 내에서 실행된다.
+장고 프로그램도 파이썬의 기본 패키지가 아니므로 가상 환경 내에 설치해줘야 한다.
+# v3PyBook 가상 환경으로 진입한다.
+$ source /home/shkim/VENV/v3PyBook/bin/activate
+# 장고 2.0 버전을 설치합니다.
+(v3PyBook) $ pip install Django==2.0
+# v3PyBook 가상 환경에 설치된 패키지 리스트를 확인합니다.
+(v3PyBook) $ pip list
+
+7.5 PythonAnywhere 서버에서 장고 설정 변경하기
+PythonAnywhere 서버도 운영 서버의 하나로, PythonAnywhere에서 제공하는 웹 서버가 실행되고 있다.
+따라서 PythonAnywhere 서버에서 장고 프로그램을 실행하려면 6장에서 설명한 내용을 반영해야 합니다.
+다만 여기서는 서버가 에러 없이 동작할 정도로만 장고 설정 사항을 변경.
+
+리눅스의 텍스트 에디터 vi
+vi는 대표적인 리눅스의 텍스트 에디터입니다. 아니면 nano 에디터도 좋다.
+vi에 들어오면 명령 모드로 시작합니다.
+a:편집 모드로 바뀌면서, 글자를 커서 뒤에 추가하기 위한 명령입니다(append)
+i:편집 모드로 바뀌면서, 글자를 커서 앞에 삽입하기 위한 명령입니다(insert)
+Esc:편집 모드에서 명령 모드로 모드를 전환해주는 명령입니다.
+x:커서 위치에 있는 글자 하나를 삭제합니다.
+dd:커서가 있는 라인을 삭제합니다(delete line)
+:wq Enter:현재까지의 작업을 저장하고 편집기를 나옵니다(write and quit). 명령모드에서 실행
+:q! Enter:현재까지의 작업을 저장하지 않고, 작업을 취소하고 편집기를 나옵니다. 명령모드에서 실행
+:help Enter:도움말 파일로 들어갑니다. 명령 모드에서 실행합니다.
+
+$ cd ~/ch7/mysite
+$ vi settings.py
+ALLOWED_HOSTS = ['shkim.pythonanywhere.com', ~] #변경
+STATIC_ROOT = os.path.join(BASE_DIR, 'www_dir', 'static') #추가
+
+설정 파일을 변경한 후에는 정적 파일을 모으기 위해 collectstatic 명령을 실행합니다.
+여전히 가상 환경 내에서 명령을 실행하는 것.
+$ cd /~/ch7
+$ source /~/activate
+(v3PyBook) $ python manage.py collectstatic
+
+7.6 PythonAnywhere 웹 서버 설정하기
+PythonAnywhere 서버 H/W에도 웹 서버가 실행되고 있습니다.
+웹 서버가 장고 프로그램을 인식할 수 있도록 웹 서버의 설정을 변경해야 합니다.
+PythonAnywhere 웹 서버의 설정 작업을 위해 Web 메뉴를 클릭.
+[Add a new web app]버튼을 클릭하면 설정 마법사가 시작.
+도메인명을 알려주는 팝업이 뜨면 [Next] 버튼을 클릭합니다.
+도메인명은 Username을 사용해 shkim.pythonanywhere.com이 됩니다.
+그 다음은 파이썬 프레임워크를 선택하는 화면인데 가상환경을 사용하므로 Django가 아닌 [Manual configuration]을 클릭.
+가상 환경을 사용하지 않으면서 신규 장고 프로젝트를 만드는 경우만 [Django]를 선택.
+그 다음은 파이썬 버전을 선택하는 화면.
+가상환경에서 사용하는 버전과 일치해야 합니다.
+가상 환경 v3PyBook을 만들 때 지정한 파이썬 3.6 버전을 선택.
+마지막으로 [Next]를 클릭하면 마법사가 종료되고 설정 사항이 웹 서버에 적용.
+마법사가 종료되면 화면이 나오는데 무료 계정이므로 3개월마다 연장해줘야 합니다.
+그 외에도 자동으로 등록된 PythonAnywhere 웹 서버의 설정 사항이 보입니다.
+유의할 점은 이 단계가 되면 PythonAnywhere 웹 서버가 기동되고 있다는 점입니다.
+그래서 브라우저로 접속해보면 페이지가 나타납니다.
+
+우리가 개발한 장고 프로그램을 실행하기 위해서는 설정 마법사에 등록된 내용을 수정해야 합니다.
+Code, Virtualenv, Static file 등 3개의 섹션의 내용을 지금까지 개발한 장고 프로젝트에 맞춰 수정합니다.
+PythonAnywhere Web 화면에서 스크롤을 내리면 Code 섹션에서는 WSGI configuration file의 내용만 수정하면 됩니다.
+수정을 위해 해당 파일명을 클릭합니다.
+Python version은 가상 환경의 파이썬 버전과 일치하는지 확인합니다.
+Username_pythonanywhere_com_wsgi.py파일이 열리면 기존 내용을 모두 지우고
+import os
+import sys
+
+# 프로젝트의 루트(베이스) 디렉토리를 지정합니다.
+path = '/home/shkim/pyBook/ch7'
+if path not in sys.path:
+    sys.path.append(path)
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+으로 작성 후 [Save]하여 저장.
+
+Virtualenv 섹션에서는 앞서 만든 가상 환경을 등록합니다.
+Enter path to a virtualenv, if desired를 클릭한 후 v3PyBook 가상 환경의 루트 디렉토리 /home/shkim/VENV/v3PyBook을 입력하고
+체크 버튼을 클릭.
+
+Static files 섹션에서는 settings.py 파일에 정의된 내용을 그대로 기입합니다.
+URL란에는 STATIC_URL 설정 항목의 값을, Directory란에는 STATIC_ROOT 설정 항목의 값을 등록합니다.
+URL->/static/
+Directory->/home/shkim/pyBook/ch7/www_dir/static
+
+모든 설정을 완료하였으면 PythonAnywhere Web 화면 상단의 초록색 Reload 버튼을 클릭하여 새로운 설정으로 웹서버를 시작.
+
+7.7 지금까지 작업 확인하기
+브라우저로 PythonAnywhere 사이트에 접속해보자.
+http://shkim.pythonanywhere.com #shkim은 실제 Username 입력
+또한 PythonAnywhere 웹 서버는 로그도 제공하는데, Web 메뉴의 Log files 섹션에서 확인할 수 있습니다.
+원하는 로그 파일을 클릭하면 내용을 볼 수 있다.

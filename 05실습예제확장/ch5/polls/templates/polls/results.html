@@ -1,0 +1,37 @@
+<!--base_polls.html 템플릿을 상속-->
+{% extends "base_polls.html" %}
+<!--content 블록을 재정의-->
+{% block content %}
+
+<h1>{{ question.question_text }}</h1>
+<ul>
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+
+{% endblock content %}
+
+
+{% comment %}
+<!--질문을 제목으로 사용하기 위해 폰트 크기를 <h1>로 설정.-->
+<!--question 템플릿 변수는 results() 뷰 함수에서 넘겨준 컨텍스트 변수로, Question 클래스 타입의 객체를 담고 있음. -->
+<h1>{{question.question_text}}</h1>
+
+<ul>
+    {# 뷰 함수에서 넘어온 question 변수를 이용해 {% for %} 태그로 Choice 객체를 순회하고 있습니다. #}
+    <!--question.choice_set.all의 의미는 Qusetion 객체의 choice_set속성에 들어가있는 항목, 즉 Choice 객체 모두.-->
+    {% for choice in question.choice_set.all %}
+    <!--Choice 객체의 choice_text를 순서없는 리스트로 화면에 보여줍니다.(<ul>,<li>태그 역할)-->
+    <!--또한, 각 텍스트 옆에 투표카운트(choice.votes)를 숫자로 보여줍니다.-->
+    <!--vote{{choice.votes|pluralize}}의미는 choice votes값에 따라 복수 접미사(s)를 붙여주는 것-->
+    <li>{{choice.choice_text}} - {{choice.votes}} vote{{choice.votes|pluralize}}</li>
+    {% endfor %}
+</ul>
+
+<!--Vote again?이라는 문장을 보여주고, 그 문장에 URL 링크를 연결합니다.-->
+{# URL 링크는 {% url %} 태그를 사용해 /polls/3/과 같은 형식으로 만들어 줍니다. #}
+<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+{% endcomment %}
